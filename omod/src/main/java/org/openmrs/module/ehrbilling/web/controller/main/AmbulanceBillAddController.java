@@ -36,19 +36,22 @@ import java.util.List;
 @Controller
 @RequestMapping("/module/ehrbilling/addAmbulanceBill.form")
 public class AmbulanceBillAddController {
+	
 	Log log = LogFactory.getLog(getClass());
 	
-	@RequestMapping(method=RequestMethod.POST)
-	public String onSubmit(Model model,@RequestParam("driverId") Integer driverId,@RequestParam("ambulanceIds") Integer[] ambulanceIds, HttpServletRequest request,Object command, BindingResult binding ){
-
+	@RequestMapping(method = RequestMethod.POST)
+	public String onSubmit(Model model, @RequestParam("driverId") Integer driverId,
+	        @RequestParam("ambulanceIds") Integer[] ambulanceIds, HttpServletRequest request, Object command,
+	        BindingResult binding) {
+		
 		validate(ambulanceIds, binding, request);
-		if( binding.hasErrors()){
+		if (binding.hasErrors()) {
 			model.addAttribute("errors", binding.getAllErrors());
 			return "module/ehrbilling/main/ambulanceBillAdd";
 		}
 		
 		BillingService billingService = (BillingService) Context.getService(BillingService.class);
-
+		
 		Driver driver = billingService.getDriverById(driverId);
 		AmbulanceBill ambulanceBill = new AmbulanceBill();
 		ambulanceBill.setDriver(driver);
@@ -56,23 +59,23 @@ public class AmbulanceBillAddController {
 		ambulanceBill.setCreator(Context.getAuthenticatedUser());
 		
 		Ambulance ambulance = null;
-		Money itemAmount; 
+		Money itemAmount;
 		Money totalAmount = new Money(BigDecimal.ZERO);
 		for (Integer id : ambulanceIds) {
 			
 			ambulance = billingService.getAmbulanceById(id);
-			BigDecimal amount = new BigDecimal(request.getParameter(id+"_amount"));
+			BigDecimal amount = new BigDecimal(request.getParameter(id + "_amount"));
 			itemAmount = new Money(amount);
 			totalAmount = totalAmount.plus(itemAmount);
 			
-			Integer numberOfTrip = Integer.parseInt(request.getParameter(id+"_numOfTrip"));
+			Integer numberOfTrip = Integer.parseInt(request.getParameter(id + "_numOfTrip"));
 			
 			// New Requirement Additional details in Ambulance Bill
-			String patientName =(request.getParameter(id+"_patientName"));
+			String patientName = (request.getParameter(id + "_patientName"));
 			// feedback of New Requirement Additional details in Ambulance Bill
-			String receiptNumber =(request.getParameter(id+"_receiptNumber"));
-			String origin =(request.getParameter(id+"_origin"));
-			String destination =(request.getParameter(id+"_destination"));
+			String receiptNumber = (request.getParameter(id + "_receiptNumber"));
+			String origin = (request.getParameter(id + "_origin"));
+			String destination = (request.getParameter(id + "_destination"));
 			
 			AmbulanceBillItem item = new AmbulanceBillItem();
 			item.setName(ambulance.getName());
@@ -88,50 +91,50 @@ public class AmbulanceBillAddController {
 			item.setOrigin(origin);
 			item.setDestination(destination);
 			
-			
 			ambulanceBill.addBillItem(item);
 		}
 		ambulanceBill.setAmount(totalAmount.getAmount());
 		ambulanceBill.setReceipt(billingService.createReceipt());
 		ambulanceBill = billingService.saveAmbulanceBill(ambulanceBill);
-
-		return "redirect:/module/ehrbilling/ambulanceBill.list?driverId="+driverId+"&ambulanceBillId="+ambulanceBill.getAmbulanceBillId();
+		
+		return "redirect:/module/ehrbilling/ambulanceBill.list?driverId=" + driverId + "&ambulanceBillId="
+		        + ambulanceBill.getAmbulanceBillId();
 	}
 	
-	@RequestMapping(method=RequestMethod.GET)
-	public String displayForm(@ModelAttribute("command") Object command, @RequestParam("driverId") Integer driverId, HttpServletRequest request, Model model){
-
+	@RequestMapping(method = RequestMethod.GET)
+	public String displayForm(@ModelAttribute("command") Object command, @RequestParam("driverId") Integer driverId,
+	        HttpServletRequest request, Model model) {
+		
 		BillingService billingService = (BillingService) Context.getService(BillingService.class);
 		
 		List<Ambulance> listAmbulance = billingService.getActiveAmbulances();
 		
-		if( listAmbulance == null || listAmbulance.size() == 0  )
-		{
+		if (listAmbulance == null || listAmbulance.size() == 0) {
 			request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "No Ambulance found.");
-		}else {
+		} else {
 			model.addAttribute("listAmbulance", listAmbulance);
 		}
 		model.addAttribute("driverId", driverId);
 		return "module/ehrbilling/main/ambulanceBillAdd";
 	}
-
-	private void validate(Integer[] ids, BindingResult binding, HttpServletRequest request){
-		for( int id : ids){
+	
+	private void validate(Integer[] ids, BindingResult binding, HttpServletRequest request) {
+		for (int id : ids) {
 			try {
-	            Integer.parseInt(request.getParameter(id+"_numOfTrip"));
-            }
-            catch (Exception e) {
-            	binding.reject("billing.bill.quantity.invalid", "Number of trip is invalid");
-            	return;
-            }
-            try {
-	            new BigDecimal(request.getParameter(id+"_amount"));
-            }
-            catch (Exception e) {
-            	binding.reject("billing.bill.quantity.invalid", "Amount is invalid");
-            	return;
-            }
-				
+				Integer.parseInt(request.getParameter(id + "_numOfTrip"));
+			}
+			catch (Exception e) {
+				binding.reject("billing.bill.quantity.invalid", "Number of trip is invalid");
+				return;
+			}
+			try {
+				new BigDecimal(request.getParameter(id + "_amount"));
+			}
+			catch (Exception e) {
+				binding.reject("billing.bill.quantity.invalid", "Amount is invalid");
+				return;
+			}
+			
 		}
 	}
 	

@@ -90,7 +90,7 @@
 			</c:if>
 		</table>
 		<table width="100%" border="1">
-			<tr>  <!-- Sept 22,2012 -- Sagar Bele -- Issue 387 --Adjust allignment in table-->
+			<tr>  <!-- Adjust allignment in table-->
 				<th align="center">Service Name</th>
 				<th align="center">Price (Rs)</th>
 				<th align="center">Quantity</th>
@@ -286,7 +286,7 @@
 	}
 </script>
 
-<c:if test="${not empty listBill}">  <!-- Sept 22,2012 -- Sagar Bele -- Issue 387 --update title-->
+<c:if test="${not empty listBill}">  <!-- Issue 387 --update title-->
 	<span class="boxHeader">List of Voided bills</span>
 	<table class="box">
 		<thead>

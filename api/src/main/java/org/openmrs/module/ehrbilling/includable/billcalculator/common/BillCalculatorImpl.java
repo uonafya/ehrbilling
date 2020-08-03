@@ -1,41 +1,31 @@
 /**
- *  Copyright 2009 Society for Health Information Systems Programmes, India (HISP India)
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
  *
- *  This file is part of Billing module.
- *
- *  Billing module is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
-
- *  Billing module is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  You should have received a copy of the GNU General Public License
- *  along with Billing module.  If not, see <http://www.gnu.org/licenses/>.
- *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
  **/
 
 package org.openmrs.module.ehrbilling.includable.billcalculator.common;
 
-import org.openmrs.module.billing.includable.billcalculator.BillCalculator;
+import org.openmrs.module.ehrbilling.includable.billcalculator.BillCalculator;
 
 import java.math.BigDecimal;
 import java.util.Map;
 
 public class BillCalculatorImpl implements BillCalculator {
-
+	
 	/**
 	 * Return 100%
 	 */
 	public BigDecimal getRate(Map<String, Object> parameters) {
 		return new BigDecimal(1);
 	}
-
+	
 	public boolean isFreeBill(Map<String, Object> parameters) {
-
+		
 		return false;
 	}
 }

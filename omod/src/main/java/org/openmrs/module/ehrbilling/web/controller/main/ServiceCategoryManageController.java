@@ -31,26 +31,25 @@ import java.util.List;
 @Controller
 @RequestMapping("/module/ehrbilling/serviceCategoryManage.form")
 public class ServiceCategoryManageController {
+	
 	Log log = LogFactory.getLog(getClass());
-
+	
 	@RequestMapping(method = RequestMethod.GET)
 	public String viewForm(Model model) {
-
-		Integer rootServiceConceptId = GlobalPropertyUtil.getInteger(
-				"billing.rootServiceConceptId", 31);
-		Concept rootServiceconcept = Context.getConceptService().getConcept(
-				rootServiceConceptId);
+		
+		Integer rootServiceConceptId = GlobalPropertyUtil.getInteger("billing.rootServiceConceptId", 31);
+		Concept rootServiceconcept = Context.getConceptService().getConcept(rootServiceConceptId);
 		if (rootServiceconcept != null) {
 			TestTree tree = new TestTree(rootServiceconcept);
 			BillingService billingService = (BillingService) Context.getService(BillingService.class);
-			List<BillableService> bss = billingService.getAllServices();			
-			for(BillableService bs:bss){		
-				Concept serviceConcept = Context.getConceptService().getConcept(bs.getConceptId());				
-				if(serviceConcept!=null){
+			List<BillableService> bss = billingService.getAllServices();
+			for (BillableService bs : bss) {
+				Concept serviceConcept = Context.getConceptService().getConcept(bs.getConceptId());
+				if (serviceConcept != null) {
 					
-					ConceptNode node = tree.findNode(serviceConcept);					
-					if(node!=null){						
-						while(!node.getParent().equals(tree.getRootLab())) {
+					ConceptNode node = tree.findNode(serviceConcept);
+					if (node != null) {
+						while (!node.getParent().equals(tree.getRootLab())) {
 							node = node.getParent();
 						}
 						bs.setCategory(node.getConcept());
@@ -58,11 +57,11 @@ public class ServiceCategoryManageController {
 					} else {
 						bs.setCategory(null);
 						billingService.saveService(bs);
-					}					
+					}
 				}
 			}
 		}
-
+		
 		return "redirect:/module/ehrbilling/main.form";
 	}
 }

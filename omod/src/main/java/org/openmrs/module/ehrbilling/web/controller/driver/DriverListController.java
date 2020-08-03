@@ -28,55 +28,52 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  *
  */
 @Controller
 @RequestMapping("/module/ehrbilling/driver.list")
 public class DriverListController {
+	
 	Log log = LogFactory.getLog(getClass());
-    
-    @RequestMapping(method=RequestMethod.POST)
-    public String deleteCompanies(@RequestParam("ids") String[] ids,HttpServletRequest request){
-    	
-    	HttpSession httpSession = request.getSession();
-		Integer driverId  = null;
-		try{
-			BillingService billingService = (BillingService)Context.getService(BillingService.class);
-			if( ids != null && ids.length > 0 ){
-				for(String sId : ids )
-				{
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public String deleteCompanies(@RequestParam("ids") String[] ids, HttpServletRequest request) {
+		
+		HttpSession httpSession = request.getSession();
+		Integer driverId = null;
+		try {
+			BillingService billingService = (BillingService) Context.getService(BillingService.class);
+			if (ids != null && ids.length > 0) {
+				for (String sId : ids) {
 					driverId = Integer.parseInt(sId);
-					Driver driver= billingService.getDriverById(driverId);
-					if( driver!= null )
-					{
+					Driver driver = billingService.getDriverById(driverId);
+					if (driver != null) {
 						billingService.deleteDriver(driver);
 					}
 				}
 			}
-		}catch (Exception e) {
-			httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-			"Can not delete driver ");
+		}
+		catch (Exception e) {
+			httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Can not delete driver ");
 			log.error(e);
 			return "redirect:/module/ehrbilling/driver.list";
 		}
-		httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-		"Driver.deleted");
-    	
-    	return "redirect:/module/ehrbilling/driver.list";
-    }
+		httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Driver.deleted");
+		
+		return "redirect:/module/ehrbilling/driver.list";
+	}
 	
-    @RequestMapping(method=RequestMethod.GET)
-	public String listTender(@RequestParam(value="pageSize",required=false)  Integer pageSize, 
-	                         @RequestParam(value="currentPage",required=false)  Integer currentPage,
-	                         Map<String, Object> model, HttpServletRequest request){
+	@RequestMapping(method = RequestMethod.GET)
+	public String listTender(@RequestParam(value = "pageSize", required = false) Integer pageSize,
+	        @RequestParam(value = "currentPage", required = false) Integer currentPage, Map<String, Object> model,
+	        HttpServletRequest request) {
 		
 		BillingService billingService = Context.getService(BillingService.class);
 		
 		int total = billingService.countListDriver();
 		
-		PagingUtil pagingUtil = new PagingUtil( RequestUtil.getCurrentLink(request) , pageSize, currentPage, total );
+		PagingUtil pagingUtil = new PagingUtil(RequestUtil.getCurrentLink(request), pageSize, currentPage, total);
 		
 		List<Driver> drivers = billingService.listDriver(pagingUtil.getStartPos(), pagingUtil.getPageSize());
 		

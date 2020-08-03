@@ -41,86 +41,78 @@ import java.util.Map;
 @Controller
 @RequestMapping("/module/ehrbilling/service.form")
 public class ServiceManageController {
+	
 	Log log = LogFactory.getLog(getClass());
-
+	
 	@RequestMapping(method = RequestMethod.GET)
 	public String viewForm(Model model) {
-
+		
 		ConceptService cs = Context.getConceptService();
-		Integer gp = Integer.valueOf(Context.getAdministrationService()
-				.getGlobalProperty(
-						BillingConstants.GLOBAL_PROPRETY_SERVICE_CONCEPT));
-
+		Integer gp = Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
+		    BillingConstants.GLOBAL_PROPRETY_SERVICE_CONCEPT));
+		
 		Concept concept = cs.getConcept(gp);
-
-		BillingService billingService = Context
-				.getService(BillingService.class);
-
+		
+		BillingService billingService = Context.getService(BillingService.class);
+		
 		List<BillableService> services = billingService.getAllServices();
-
+		
 		Map<Integer, BillableService> mapServices = new HashMap<Integer, BillableService>();
-
+		
 		for (BillableService ser : services) {
 			if (ser.getPrice() != null)
 				mapServices.put(ser.getConceptId(), ser);
 		}
-
-		model.addAttribute("tree",
-				billingService.traversServices(concept, mapServices));
-
+		
+		model.addAttribute("tree", billingService.traversServices(concept, mapServices));
+		
 		return "/module/ehrbilling/main/serviceManage";
 	}
-
+	
 	@RequestMapping(method = RequestMethod.POST)
-	public String submit(@ModelAttribute("command") Object command,
-			BindingResult binding, SessionStatus sessionStatus,
-			@RequestParam("cons") Integer[] concepts,
-			HttpServletRequest request, Model model) {
-
+	public String submit(@ModelAttribute("command") Object command, BindingResult binding, SessionStatus sessionStatus,
+	        @RequestParam("cons") Integer[] concepts, HttpServletRequest request, Model model) {
+		
 		ConceptService cs = Context.getConceptService();
-		Integer root = Integer.valueOf(Context.getAdministrationService()
-				.getGlobalProperty(
-						BillingConstants.GLOBAL_PROPRETY_SERVICE_CONCEPT));
+		Integer root = Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
+		    BillingConstants.GLOBAL_PROPRETY_SERVICE_CONCEPT));
 		validate(concepts, request, binding);
 		if (binding.hasErrors()) {
 			log.info(binding.getAllErrors());
-
+			
 			Concept concept = cs.getConcept(root);
-
-			BillingService billingService = Context
-					.getService(BillingService.class);
-
+			
+			BillingService billingService = Context.getService(BillingService.class);
+			
 			List<BillableService> services = billingService.getAllServices();
-
+			
 			Map<Integer, BillableService> mapServices = new HashMap<Integer, BillableService>();
-
+			
 			for (BillableService ser : services) {
 				if (ser.getPrice() != null)
 					mapServices.put(ser.getConceptId(), ser);
 			}
-
+			
 			model.addAttribute("errors", binding.getAllErrors());
-			model.addAttribute("tree",
-					billingService.traversServices(concept, mapServices));
+			model.addAttribute("tree", billingService.traversServices(concept, mapServices));
 			return "/module/ehrbilling/main/serviceManage";
 		}
-
-		BillingService billingService = Context
-				.getService(BillingService.class);
+		
+		BillingService billingService = Context.getService(BillingService.class);
 		List<BillableService> services = billingService.getAllServices();
-
+		
 		Map<Integer, BillableService> mapServices = new HashMap<Integer, BillableService>();
-
+		
 		for (BillableService ser : services) {
 			mapServices.put(ser.getConceptId(), ser);
 		}
 		for (int conId : concepts) {
-
+			
 			String name = request.getParameter(conId + "_name");
 			String shortName = request.getParameter(conId + "_shortName");
 			String price = request.getParameter(conId + "_price");
 			String serviceTypeText = request.getParameter(conId + "_type");
-
+			
 			BillableService service = mapServices.get(conId);
 			if (service == null) {
 				service = new BillableService();
@@ -128,13 +120,13 @@ public class ServiceManageController {
 				service.setName(name);
 				service.setShortName(shortName);
 				if (StringUtils.isNotBlank(price))
-					service.setPrice(NumberUtils.createBigDecimal(price));				
+					service.setPrice(NumberUtils.createBigDecimal(price));
 				mapServices.put(conId, service);
 			} else {
 				service.setName(name);
 				service.setShortName(shortName);
 				if (StringUtils.isNotBlank(price))
-					service.setPrice(NumberUtils.createBigDecimal(price));				
+					service.setPrice(NumberUtils.createBigDecimal(price));
 				mapServices.remove(conId);
 				mapServices.put(conId, service);
 			}
@@ -143,19 +135,18 @@ public class ServiceManageController {
 		sessionStatus.setComplete();
 		return "redirect:/module/ehrbilling/service.form";
 	}
-
-	private void validate(Integer[] concepts, HttpServletRequest request,
-			BindingResult binding) {
+	
+	private void validate(Integer[] concepts, HttpServletRequest request, BindingResult binding) {
 		for (int conId : concepts) {
 			String price = request.getParameter(conId + "_price");
 			String name = request.getParameter(conId + "_name");
 			if (StringUtils.isNotBlank(price)) {
-
+				
 				try {
 					new BigDecimal(price);
-				} catch (Exception e) {
-					binding.reject("billing.service.price.invalid",
-							"Invalid price for " + name);
+				}
+				catch (Exception e) {
+					binding.reject("billing.service.price.invalid", "Invalid price for " + name);
 					return;
 				}
 			}

@@ -240,7 +240,7 @@
 		onsubmit="return false">
 		<div>
 			<input type="button" id="subm" onclick="validateForm()" name="subm"
-				value="<spring:message code='billing.bill.save'/>" /> <input
+				value="<spring:message code='ehrbilling.bill.save'/>" /> <input
 				type="button" value="<spring:message code='general.cancel'/>"
 				onclick="javascript:window.location.href='ambulanceBill.list?driverId=${driverId}'" />
 			<input type="button" id="toogleBillBtn" value="-"
@@ -260,7 +260,7 @@
 		<div id="extra" class="cancelDraggable"
 			style="background: #f6f6f6; border: 1px #808080 solid; padding: 0.3em; margin: 0.3em 0em; width: 100%;">
 			<input type='text' size='25' value='Ambulance Name' readonly="readonly" />&nbsp; 
-			<!--  ghanshyam 07/07/2012 New Requirement #305: Additional details in Ambulance Bill -->
+			<!-- Additional details in Ambulance Bill -->
 			<input type='text' size="30" value='Patient Name' readonly="readonly" />&nbsp;
 			<input type='text' size="9" value='Receipt No.' readonly="readonly" />&nbsp;
 			<input type='text' size="9" value='No. of Trips' readonly="readonly" />&nbsp; 

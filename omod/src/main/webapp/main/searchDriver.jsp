@@ -20,14 +20,14 @@
 </p>
 
 <h2>
-	<spring:message code="billing.driver.search" />
+	<spring:message code="ehrbilling.driver.search" />
 </h2>
 <br />
 
 <form class="box" id="searchForm" method="post">
 	<table>
 		<tr>
-			<td><spring:message code="billing.name" />
+			<td><spring:message code="ehrbilling.name" />
 			</td>
 			<td><input type="text" id="searchText" name="searchText"
 				value="${searchText}" />
@@ -40,7 +40,7 @@
 	</table>
 </form>
 
-<br />  <!-- Sept 22,2012 -- Sagar Bele -- Issue 387 --update title-->
+<br />  <!-- update title-->
 <span class="boxHeader">List of Drivers</span>
 <table class="box">
 	<tr>
@@ -64,7 +64,7 @@
 		</c:when>
 		<c:otherwise>
 			<tr>
-				<td colspan="2"><spring:message code="billing.noresult" />
+				<td colspan="2"><spring:message code="ehrbilling.noresult" />
 				</td>
 			</tr>
 		</c:otherwise>

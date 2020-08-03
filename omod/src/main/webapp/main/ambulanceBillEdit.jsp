@@ -9,7 +9,7 @@
 --%>
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <openmrs:require privilege="Add Bill" otherwise="/login.htm"
-	redirect="/module/enrbilling/main.form" />
+	redirect="/module/ehrbilling/main.form" />
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <script type="text/javascript"
@@ -187,7 +187,7 @@
 		}
 	}
 	
- 	<!-- New Requirement #333 [Billing]Edit ambulance bill with all details  -->
+ 	<!--Edit ambulance bill with all details  -->
 	function validateForm(){
 			$('#totalprice').focus();
 			var okNum = true;
@@ -291,9 +291,9 @@
 		<input type="hidden" value="" name="action" id="action" />
 		<div>
 			<input type="button" id="subm" onclick="validateForm()" name="subm"
-				value="<spring:message code='billing.bill.save'/>" /> <input
+				value="<spring:message code='ehrbilling.bill.save'/>" /> <input
 				type="button" id="voi" onclick="voidBill()"
-				value="<spring:message code='billing.bill.void'/>" /> <input
+				value="<spring:message code='ehrbilling.bill.void'/>" /> <input
 				type="button" value="<spring:message code='general.cancel'/>"
 				onclick="javascript:window.location.href='ambulanceBill.list?driverId=${driverId}'" />
 			<input type="button" id="toogleBillBtn" value="-"
@@ -333,7 +333,7 @@
 	<c:set var="replace" value="#" />
 	<c:set var="serviceName"
 		value="${fn:replace(bill.name,search,replace)}" />
-	<!--  New Requirement #333 [Billing]Edit ambulance bill with all details  -->
+	<!--  New Requirement[Billing]Edit ambulance bill with all details  -->
 	<script type="text/javascript">
 		updateBill(${bill.ambulance.ambulanceId}, '${serviceName}', "${bill.patientName}", "${bill.receiptNumber}", ${bill.numberOfTrip}, "${bill.origin}",
 		 "${bill.destination}", ${bill.amount}, ${bill.ambulanceBillItemId});

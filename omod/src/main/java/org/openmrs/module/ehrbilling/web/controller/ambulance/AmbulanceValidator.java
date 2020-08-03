@@ -17,33 +17,32 @@ import org.openmrs.module.hospitalcore.model.Ambulance;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-
 /**
  *
  */
 public class AmbulanceValidator implements Validator {
-
+	
 	/**
-     * @see Validator#supports(java.lang.Class)
-     */
-    public boolean supports(Class clazz) {
-    	return Ambulance.class.equals(clazz);
-    }
-
+	 * @see Validator#supports(java.lang.Class)
+	 */
+	public boolean supports(Class clazz) {
+		return Ambulance.class.equals(clazz);
+	}
+	
 	/**
-     * @see Validator#validate(java.lang.Object, Errors)
-     */
-    public void validate(Object command, Errors error) {
-    	Ambulance ambulance= (Ambulance) command;
-    	
-    	if( StringUtils.isBlank(ambulance.getName())){
-    		error.reject("billing.name.required");
-    	}
-    	
-    	BillingService billingService = (BillingService)Context.getService(BillingService.class);
+	 * @see Validator#validate(java.lang.Object, Errors)
+	 */
+	public void validate(Object command, Errors error) {
+		Ambulance ambulance = (Ambulance) command;
+		
+		if (StringUtils.isBlank(ambulance.getName())) {
+			error.reject("billing.name.required");
+		}
+		
+		BillingService billingService = (BillingService) Context.getService(BillingService.class);
 		Integer companyId = ambulance.getAmbulanceId();
 		if (companyId == null) {
-			if (billingService.getAmbulanceByName(ambulance.getName())!= null) {
+			if (billingService.getAmbulanceByName(ambulance.getName()) != null) {
 				error.reject("billing.name.existed");
 			}
 		} else {
@@ -54,6 +53,6 @@ public class AmbulanceValidator implements Validator {
 				}
 			}
 		}
-    }
-
+	}
+	
 }

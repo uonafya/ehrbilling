@@ -36,10 +36,10 @@ import java.util.Date;
 @RequestMapping("/module/ehrbilling/tender.form")
 public class TenderFormController {
 	
-	
 	@RequestMapping(method = RequestMethod.GET)
-	public String firstView(@ModelAttribute("tender") Tender tender, @RequestParam(value="tenderId",required=false) Integer id, Model model) {
-		if( id != null ){
+	public String firstView(@ModelAttribute("tender") Tender tender,
+	        @RequestParam(value = "tenderId", required = false) Integer id, Model model) {
+		if (id != null) {
 			tender = Context.getService(BillingService.class).getTenderById(id);
 			model.addAttribute(tender);
 		}
@@ -61,7 +61,7 @@ public class TenderFormController {
 			return "/module/ehrbilling/tender/form";
 		}
 		BillingService billingService = Context.getService(BillingService.class);
-		if( tender.getRetired()) {
+		if (tender.getRetired()) {
 			tender.setRetiredDate(new Date());
 		}
 		billingService.saveTender(tender);

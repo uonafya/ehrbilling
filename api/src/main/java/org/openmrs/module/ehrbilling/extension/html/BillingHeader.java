@@ -17,7 +17,7 @@ package org.openmrs.module.ehrbilling.extension.html;
 import org.openmrs.module.Extension;
 
 public class BillingHeader extends Extension {
-
+	
 	public MEDIA_TYPE getMediaType() {
 		return MEDIA_TYPE.html;
 	}
@@ -25,11 +25,11 @@ public class BillingHeader extends Extension {
 	public String getRequiredPrivilege() {
 		return "View Bills";
 	}
-
+	
 	public String getLabel() {
 		return "billing.title";
 	}
-
+	
 	public String getUrl() {
 		return "module/billing/main.form";
 	}

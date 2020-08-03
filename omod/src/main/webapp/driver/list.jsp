@@ -12,23 +12,23 @@
 <openmrs:require privilege="View Drivers" otherwise="/login.htm"
 	redirect="/module/ehrbilling/main.form" />
 
-<spring:message var="pageTitle" code="billing.driver.manage"
+<spring:message var="pageTitle" code="ehrbilling.driver.manage"
 	scope="page" />
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
 
 <link type="text/css" rel="stylesheet"
-	href="${pageContext.request.contextPath}/moduleResources/billing/styles/paging.css" />
+	href="${pageContext.request.contextPath}/moduleResources/ehrbilling/styles/paging.css" />
 <script type="text/javascript"
-	src="${pageContext.request.contextPath}/moduleResources/billing/scripts/paging.js"></script>
+	src="${pageContext.request.contextPath}/moduleResources/ehrbilling/scripts/paging.js"></script>
 <script type="text/javascript"
-	src="${pageContext.request.contextPath}/moduleResources/billing/scripts/jquery/jquery-1.4.2.min.js"></script>
+	src="${pageContext.request.contextPath}/moduleResources/ehrbilling/scripts/jquery/jquery-1.4.2.min.js"></script>
 <h2>
 	<spring:message code="billing.driver.manage" />
 </h2>
 <p>
 	<b><a href="searchDriver.form"><spring:message
-				code="billing.ambulance" />
+				code="ehrbilling.ambulance" />
 	</a>
 	</b>
 </p>
@@ -38,7 +38,7 @@
 			code="${error.defaultMessage}" text="${error.defaultMessage}" />
 	</span><
 </c:forEach>
-<input type="button" value="<spring:message code='billing.driver.add'/>"
+<input type="button" value="<spring:message code='ehrbilling.driver.add'/>"
 	onclick="javascript:window.location.href='driver.form'" />
 
 <br />
@@ -47,8 +47,8 @@
 	<c:when test="${not empty drivers}">
 		<form method="post" onsubmit="return false" id="form">
 			<input type="button" onclick="checkValue()"
-				value="<spring:message code='billing.driver.deleteselected'/>" /> <span
-				class="boxHeader"><spring:message code="billing.driver.list" />
+				value="<spring:message code='ehrbilling.driver.deleteselected'/>" /> <span
+				class="boxHeader"><spring:message code="ehrbilling.driver.list" />
 			</span>
 			<div class="box">
 				<table cellpadding="5" cellspacing="0">
@@ -56,11 +56,11 @@
 						<th>#</th>
 						<th><spring:message code="general.name" />
 						</th>
-						<th><spring:message code="billing.phone" />
+						<th><spring:message code="ehrbilling.phone" />
 						</th>
-						<th><spring:message code="billing.address" />
+						<th><spring:message code="ehrbilling.address" />
 						</th>
-						<th><spring:message code="billing.createddate" />
+						<th><spring:message code="ehrbilling.createddate" />
 						</th>
 						<th></th>
 					</tr>

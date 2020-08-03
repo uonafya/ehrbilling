@@ -39,7 +39,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  *
  */
@@ -49,32 +48,33 @@ public class BillableServiceBillAddController {
 	
 	private Log logger = LogFactory.getLog(getClass());
 	
-	@RequestMapping(method=RequestMethod.GET)
-	public String viewForm( Model model, @RequestParam("patientId") Integer patientId){
+	@RequestMapping(method = RequestMethod.GET)
+	public String viewForm(Model model, @RequestParam("patientId") Integer patientId) {
 		BillingService billingService = Context.getService(BillingService.class);
 		List<BillableService> services = billingService.getAllServices();
-    	Map<Integer, BillableService> mapServices = new HashMap<Integer, BillableService>();
-		for(BillableService ser : services){
-				mapServices.put(ser.getConceptId(), ser);
+		Map<Integer, BillableService> mapServices = new HashMap<Integer, BillableService>();
+		for (BillableService ser : services) {
+			mapServices.put(ser.getConceptId(), ser);
 		}
-		Integer conceptId = Integer.valueOf(Context.getAdministrationService().getGlobalProperty("billing.rootServiceConceptId"));
+		Integer conceptId = Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
+		    "billing.rootServiceConceptId"));
 		Concept concept = Context.getConceptService().getConcept(conceptId);
 		model.addAttribute("tabs", billingService.traversTab(concept, mapServices, 1));
 		model.addAttribute("patientId", patientId);
 		return "/module/ehrbilling/main/billableServiceBillAdd";
 	}
 	
-	@RequestMapping(method=RequestMethod.POST)
-	public String onSubmit(Model model,Object command, BindingResult bindingResult, HttpServletRequest request,
-	                       @RequestParam("cons") Integer[] cons, @RequestParam("patientId") Integer patientId){
-		validate(cons, bindingResult, request);		
-		if( bindingResult.hasErrors()){
+	@RequestMapping(method = RequestMethod.POST)
+	public String onSubmit(Model model, Object command, BindingResult bindingResult, HttpServletRequest request,
+	        @RequestParam("cons") Integer[] cons, @RequestParam("patientId") Integer patientId) {
+		validate(cons, bindingResult, request);
+		if (bindingResult.hasErrors()) {
 			model.addAttribute("errors", bindingResult.getAllErrors());
 			return "module/ehrbilling/main/billableServiceBillEdit";
 		}
 		
 		BillingService billingService = Context.getService(BillingService.class);
-
+		
 		PatientService patientService = Context.getPatientService();
 		
 		// Get the BillCalculator to calculate the rate of bill item the patient has to pay
@@ -94,60 +94,61 @@ public class BillableServiceBillAddController {
 		Money totalAmount = new Money(BigDecimal.ZERO);
 		BigDecimal totalActualAmount = new BigDecimal(0);
 		BigDecimal unitPrice;
-		String name ;
-		BillableService service ;
+		String name;
+		BillableService service;
 		
-		for( int conceptId : cons){
-		
-			unitPrice = NumberUtils.createBigDecimal(request.getParameter(conceptId+"_unitPrice"));
-			quantity = NumberUtils.createInteger(request.getParameter(conceptId+"_qty"));
-			name = request.getParameter(conceptId+"_name");
+		for (int conceptId : cons) {
+			
+			unitPrice = NumberUtils.createBigDecimal(request.getParameter(conceptId + "_unitPrice"));
+			quantity = NumberUtils.createInteger(request.getParameter(conceptId + "_qty"));
+			name = request.getParameter(conceptId + "_name");
 			service = billingService.getServiceByConceptId(conceptId);
-
+			
 			mUnitPrice = new Money(unitPrice);
 			itemAmount = mUnitPrice.times(quantity);
 			totalAmount = totalAmount.plus(itemAmount);
 			
-			item = new PatientServiceBillItem();			
+			item = new PatientServiceBillItem();
 			item.setCreatedDate(new Date());
 			item.setName(name);
 			item.setPatientServiceBill(bill);
 			item.setQuantity(quantity);
 			item.setService(service);
-			item.setUnitPrice(unitPrice);		
+			item.setUnitPrice(unitPrice);
 			
 			item.setAmount(itemAmount.getAmount());
 			
 			// Get the ratio for each bill item
-			Map<String, Object> parameters = HospitalCoreUtils.buildParameters("patient", patient, "attributes", attributes, "billItem", item, "request", request);
-			BigDecimal rate = calculator.getRate(parameters);	
+			Map<String, Object> parameters = HospitalCoreUtils.buildParameters("patient", patient, "attributes", attributes,
+			    "billItem", item, "request", request);
+			BigDecimal rate = calculator.getRate(parameters);
 			item.setActualAmount(item.getAmount().multiply(rate));
 			totalActualAmount = totalActualAmount.add(item.getActualAmount());
 			
 			bill.addBillItem(item);
 		}
-		bill.setAmount(totalAmount.getAmount());	
+		bill.setAmount(totalAmount.getAmount());
 		bill.setActualAmount(totalActualAmount);
 		
-		bill.setFreeBill(calculator.isFreeBill(HospitalCoreUtils
-				.buildParameters("attributes", attributes)));
+		bill.setFreeBill(calculator.isFreeBill(HospitalCoreUtils.buildParameters("attributes", attributes)));
 		logger.info("Is free bill: " + bill.getFreeBill());
 		
 		bill.setReceipt(billingService.createReceipt());
-		bill = billingService.savePatientServiceBill(bill);		
-		return "redirect:/module/ehrbilling/patientServiceBill.list?patientId="+patientId+"&billId="+bill.getPatientServiceBillId();
+		bill = billingService.savePatientServiceBill(bill);
+		return "redirect:/module/ehrbilling/patientServiceBill.list?patientId=" + patientId + "&billId="
+		        + bill.getPatientServiceBillId();
 		
 	}
 	
-	private void validate(Integer[] ids, BindingResult binding, HttpServletRequest request){
-		for( int id : ids){
+	private void validate(Integer[] ids, BindingResult binding, HttpServletRequest request) {
+		for (int id : ids) {
 			try {
-	            Integer.parseInt(request.getParameter(id+"_qty"));
-            }
-            catch (Exception e) {
-            	binding.reject("billing.bill.quantity.invalid", "Quantity is invalid");
-            	return;
-            }
+				Integer.parseInt(request.getParameter(id + "_qty"));
+			}
+			catch (Exception e) {
+				binding.reject("billing.bill.quantity.invalid", "Quantity is invalid");
+				return;
+			}
 		}
 	}
 }

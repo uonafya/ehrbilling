@@ -35,15 +35,15 @@ public class DriverFormController {
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(java.lang.Boolean.class, new CustomBooleanEditor("true",
-		        "false", true));
+		binder.registerCustomEditor(java.lang.Boolean.class, new CustomBooleanEditor("true", "false", true));
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String firstView(@ModelAttribute("driver") Driver driver, @RequestParam(value="driverId",required=false) Integer id, Model model) {
-		if( id != null ){
+	public String firstView(@ModelAttribute("driver") Driver driver,
+	        @RequestParam(value = "driverId", required = false) Integer id, Model model) {
+		if (id != null) {
 			driver = Context.getService(BillingService.class).getDriverById(id);
-		}else{
+		} else {
 			driver = new Driver();
 		}
 		model.addAttribute(driver);
@@ -58,9 +58,9 @@ public class DriverFormController {
 			return "/module/ehrbilling/driver/form";
 		}
 		BillingService billingService = Context.getService(BillingService.class);
-		if( driver.getRetired() ){
+		if (driver.getRetired()) {
 			driver.setRetiredDate(new Date());
-		}else{
+		} else {
 			driver.setCreatedDate(new Date());
 		}
 		billingService.saveDriver(driver);

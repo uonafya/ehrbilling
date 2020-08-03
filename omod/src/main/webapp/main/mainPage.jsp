@@ -13,19 +13,19 @@
 
 <openmrs:require privilege="View Bills" otherwise="/login.htm"
 	redirect="/module/ehrbilling/main.form" />
-<spring:message var="pageTitle" code="billing.patient.find" scope="page" />
+<spring:message var="pageTitle" code="ehrbilling.patient.find" scope="page" />
 <openmrs:globalProperty key="hospitalcore.hospitalName"
 	defaultValue="ddu" var="hospitalName" />
 <br />
 <p>
 	<b><a href="searchDriver.form"><spring:message
-				code="billing.ambulance" />
+				code="ehrbilling.ambulance" />
 	</a>
 	</b>&nbsp; | &nbsp; <b><a href="searchCompany.form"><spring:message
-				code="billing.tender" />
+				code="ehrbilling.tender" />
 	</a>
 	</b>&nbsp; | &nbsp; <b><a href="miscellaneousServiceBill.list"><spring:message
-				code="billing.miscellaneousService" />
+				code="ehrbilling.miscellaneousService" />
 	</a>
 	</b>
 </p>
@@ -48,9 +48,7 @@
 			}
 		});
 		
-		/**
-		* June 6th 2012: Thai Chuong - Supported #247
-		*/
+
 		jQuery("#billId", "#billSearch").keyup(function(event){				
 			if(event.keyCode == 13){	
 				jQuery("#billSearch").ajaxSubmit();
@@ -69,7 +67,7 @@
 <div class="box" id="searchbox"></div>
 <br />
 
-<!-- June 6th 2012: Thai Chuong Supported new requirement #247 -->
+
 <form id="billSearch" action="${pageContext.request.contextPath}/module/hospitalcore/findBill.htm" method="GET">
 	<b class="boxHeader"><spring:message code="billing.Patient.find.byBillId" />
 	</b>
@@ -88,7 +86,7 @@
 	</div>
 	<br />
 </form>
-<!-- End #247 -->
+<!-- End-->
 
 <div id="patientSearchResultSection" style="display: none;">
 	<div class="boxHeader">Found Patients</div>

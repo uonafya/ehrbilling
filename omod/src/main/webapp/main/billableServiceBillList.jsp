@@ -94,14 +94,14 @@
 			</c:if>
 		</table>
 		<table width="100%" border="1">
-			<tr> <!-- Sept 22,2012 -- Sagar Bele -- Issue 387 --Adjust allignment in table-->
+			<tr> <!--Adjust allignment in table-->
 				<th align="center">Service Name</th>
 				<th align="center">Price (Rs)</th>
 				<th align="center">Quantity</th>
 				<th align="center">Amount</th>
 			</tr>
 			<c:forEach items="${bill.billItems}" var="item" varStatus="status">
-			<%-- ghanshyam Support #339 [Billing]print of void bill [3.2.7 snapshot][DDU,Mohali,Solan,Tanda,] --%>
+			<%-- #339 [Billing]print of void bill [3.2.7 snapshot][DDU] --%>
             <c:if test="${item.voidedDate==null}">
 				<tr>
 					<td>${item.name}</td>
@@ -238,7 +238,7 @@
 				<th class="printfont" style="">Amount</th>
 			</thead>
 			<c:forEach items="${bill.billItems}" var="item" varStatus="status">
-			<%-- ghanshyam Support #339 [Billing]print of void bill [3.2.7 snapshot][DDU,Mohali,Solan,Tanda,] --%>
+			<%-- ghanshyam Support #339 [Billing]print of void bill [3.2.7 snapshot][DDU] --%>
             <c:if test="${item.voidedDate==null}">
 				<tr>
 					<td class="printfont" height="20" style="">${item.name}</td>

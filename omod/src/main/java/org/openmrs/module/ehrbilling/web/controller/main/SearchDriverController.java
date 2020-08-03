@@ -18,28 +18,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 /**
  *
  */
 @Controller
 @RequestMapping("/module/ehrbilling/searchDriver.form")
 public class SearchDriverController {
-
-	@RequestMapping(method=RequestMethod.POST)	
-	public String searchCompany(@RequestParam("searchText") String searchText, Model model){
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public String searchCompany(@RequestParam("searchText") String searchText, Model model) {
 		
 		BillingService billingService = Context.getService(BillingService.class);
 		
 		model.addAttribute("drivers", billingService.searchDriver(searchText));
 		
 		model.addAttribute("searchText", searchText);
-			
+		
 		return "/module/ehrbilling/main/searchDriver";
 	}
 	
-	@RequestMapping(method=RequestMethod.GET)
-	public String listAll(Model model){
+	@RequestMapping(method = RequestMethod.GET)
+	public String listAll(Model model) {
 		BillingService billingService = Context.getService(BillingService.class);
 		model.addAttribute("drivers", billingService.getAllActiveDriver());
 		return "/module/ehrbilling/main/searchDriver";

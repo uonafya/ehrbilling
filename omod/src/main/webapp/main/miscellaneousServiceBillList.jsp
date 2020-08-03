@@ -59,18 +59,18 @@
 			</tr>
 		</table>
 		<table width="100%" border="1">
-			<tr> <!-- Sept 22,2012 -- Sagar Bele -- Issue 387 --Adjust allignment in table-->
+			<tr> <!--Adjust allignment in table-->
 				<th align="center">Service</th>
 				<th align="center">Quantity</th>
 				<th align="center">Price (Rs)</th>
 			</tr>
-			<tr> <!-- Sept 22,2012 -- Sagar Bele -- Issue 387 --Adjust allignment in table-->
+			<tr> <!-- Adjust allignment in table-->
 				<td align="left">${bill.service.name}</td>
 				<td align="right">${bill.quantity}</td>
 				<td align="right">${bill.amount}</td>
 			</tr>
 			<tr>
-				<td></td> <!-- Sept 22,2012 -- Sagar Bele -- Issue 387 --Adjust allignment in table-->
+				<td></td> <!-- Adjust allignment in table-->
 				<td  align="right"><b>Total</b></td>				
 				<td align="right">${bill.amount}</td>
 			</tr>
@@ -80,7 +80,7 @@
 			<center>
 				<c:if test="${bill.voided==false }">
 					<input type="button"
-						value='<spring:message code="billing.print" />'
+						value='<spring:message code="ehrbilling.print" />'
 						onClick="printDiv();" />&nbsp;&nbsp;</c:if>
 				<a href="#" onclick="javascript:jQuery('#billContainer').hide();">Hide</a>
 			</center>
@@ -91,7 +91,7 @@
 
 	<div id="printDiv" class="hidden"
 		style="margin: 10px auto; width: 981px; font-size: 1.5em; font-family: 'Dot Matrix Normal', Arial, Helvetica, sans-serif;">
-		<%-- ghanshyam 18-sept-2012 Support #386 [Solan][billing-3.2.7 snap shot]-misc services print out(note:-commented below line for that) --%>
+
 		<%-- 
 		<img
 			src="${pageContext.request.contextPath}/moduleResources/billing/HEADEROPDSLIP.jpg"

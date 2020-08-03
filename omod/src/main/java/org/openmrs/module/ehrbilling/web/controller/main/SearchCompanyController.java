@@ -18,28 +18,26 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-
 /**
  *
  */
 @Controller
 @RequestMapping("/module/ehrbilling/searchCompany.form")
 public class SearchCompanyController {
-
 	
-	@RequestMapping(method=RequestMethod.POST)	
-	public String searchCompany(@RequestParam(value="searchText") String searchText, Model model){
+	@RequestMapping(method = RequestMethod.POST)
+	public String searchCompany(@RequestParam(value = "searchText") String searchText, Model model) {
 		BillingService billingService = Context.getService(BillingService.class);
 		
 		model.addAttribute("companies", billingService.searchCompany(searchText));
 		
 		model.addAttribute("searchText", searchText);
-			
+		
 		return "/module/ehrbilling/main/searchCompany";
 	}
 	
-	@RequestMapping(method=RequestMethod.GET)
-	public String listAll(Model model){
+	@RequestMapping(method = RequestMethod.GET)
+	public String listAll(Model model) {
 		BillingService billingService = Context.getService(BillingService.class);
 		model.addAttribute("companies", billingService.getAllActiveCompany());
 		return "/module/ehrbilling/main/searchCompany";

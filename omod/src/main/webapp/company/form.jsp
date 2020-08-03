@@ -10,11 +10,11 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
 <openmrs:require privilege="Add/Edit Company" otherwise="/login.htm"
-	redirect="/module/billing/main.form" />
+	redirect="/module/ehrbilling/main.form" />
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <h2>
-	<spring:message code="billing.company.manage" />
+	<spring:message code="ehrbilling.company.manage" />
 </h2>
 
 <c:forEach items="${errors.allErrors}" var="error">
@@ -47,7 +47,7 @@
 				</spring:bind></td>
 		</tr>
 		<tr>
-			<td valign="top"><spring:message code="billing.description" />
+			<td valign="top"><spring:message code="ehrbilling.description" />
 			</td>
 			<td><spring:bind path="company.description">
 					<input type="text" name="${status.expression}"
@@ -58,7 +58,7 @@
 				</spring:bind></td>
 		</tr>
 		<tr>
-			<td valign="top"><spring:message code="billing.phone" />
+			<td valign="top"><spring:message code="ehrbilling.phone" />
 			</td>
 			<td><spring:bind path="company.phone">
 					<input type="text" name="${status.expression}"
@@ -69,7 +69,7 @@
 				</spring:bind></td>
 		</tr>
 		<tr>
-			<td valign="top"><spring:message code="billing.address" />
+			<td valign="top"><spring:message code="ehrbilling.address" />
 			</td>
 			<td><spring:bind path="company.address">
 					<input type="text" name="${status.expression}"

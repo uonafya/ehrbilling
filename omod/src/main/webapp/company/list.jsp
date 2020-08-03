@@ -12,23 +12,23 @@
 <openmrs:require privilege="View Companies" otherwise="/login.htm"
 	redirect="/module/ehrbilling/main.form" />
 
-<spring:message var="pageTitle" code="billing.company.manage"
+<spring:message var="pageTitle" code="ehrbilling.company.manage"
 	scope="page" />
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
 
 <link type="text/css" rel="stylesheet"
-	href="${pageContext.request.contextPath}/moduleResources/billing/styles/paging.css" />
+	href="${pageContext.request.contextPath}/moduleResources/ehrbilling/styles/paging.css" />
 <script type="text/javascript"
-	src="${pageContext.request.contextPath}/moduleResources/billing/scripts/paging.js"></script>
+	src="${pageContext.request.contextPath}/moduleResources/ehrbilling/scripts/paging.js"></script>
 <script type="text/javascript"
-	src="${pageContext.request.contextPath}/moduleResources/billing/scripts/jquery/jquery-1.4.2.min.js"></script>
+	src="${pageContext.request.contextPath}/moduleResources/ehrbilling/scripts/jquery/jquery-1.4.2.min.js"></script>
 <h2>
-	<spring:message code="billing.company.manage" />
+	<spring:message code="ehrbilling.company.manage" />
 </h2>
 <p>
 	<b><a href="searchCompany.form"><spring:message
-				code="billing.tender" />
+				code="ehrbilling.tender" />
 	</a>
 	</b>
 </p>
@@ -39,7 +39,7 @@
 	</span><
 </c:forEach>
 <input type="button"
-	value="<spring:message code='billing.company.add'/>"
+	value="<spring:message code='ehrbilling.company.add'/>"
 	onclick="javascript:window.location.href='company.form'" />
 
 <br />
@@ -48,8 +48,8 @@
 	<c:when test="${not empty companies}">
 		<form method="post" onsubmit="return false" id="form">
 			<input type="button" onclick="checkValue()"
-				value="<spring:message code='billing.company.deleteselected'/>" /> <span
-				class="boxHeader"><spring:message code="billing.company.list" />
+				value="<spring:message code='ehrbilling.company.deleteselected'/>" /> <span
+				class="boxHeader"><spring:message code="ehrbilling.company.list" />
 			</span>
 			<div class="box">
 				<table cellpadding="5" cellspacing="0">
@@ -57,11 +57,11 @@
 						<th>#</th>
 						<th><spring:message code="general.name" />
 						</th>
-						<th><spring:message code="billing.phone" />
+						<th><spring:message code="ehrbilling.phone" />
 						</th>
-						<th><spring:message code="billing.address" />
+						<th><spring:message code="ehrbilling.address" />
 						</th>
-						<th><spring:message code="billing.createddate" />
+						<th><spring:message code="ehrbilling.createddate" />
 						</th>
 						<th></th>
 					</tr>

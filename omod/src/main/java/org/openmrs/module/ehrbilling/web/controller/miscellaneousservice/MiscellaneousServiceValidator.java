@@ -17,33 +17,32 @@ import org.openmrs.module.hospitalcore.model.MiscellaneousService;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-
 /**
  *
  */
 public class MiscellaneousServiceValidator implements Validator {
-
+	
 	/**
-     * @see Validator#supports(java.lang.Class)
-     */
-    public boolean supports(Class clazz) {
-    	return MiscellaneousService.class.equals(clazz);
-    }
-
+	 * @see Validator#supports(java.lang.Class)
+	 */
+	public boolean supports(Class clazz) {
+		return MiscellaneousService.class.equals(clazz);
+	}
+	
 	/**
-     * @see Validator#validate(java.lang.Object, Errors)
-     */
-    public void validate(Object command, Errors error) {
-    	MiscellaneousService miscellaneousService = (MiscellaneousService) command;
-    	
-    	if( StringUtils.isBlank(miscellaneousService.getName())){
-    		error.reject("billing.name.required");
-    	}
-    	if( miscellaneousService.getPrice() == null){
-    		error.reject("billing.price.required");
-    	}
-    	
-    	BillingService billingService = (BillingService)Context.getService(BillingService.class);
+	 * @see Validator#validate(java.lang.Object, Errors)
+	 */
+	public void validate(Object command, Errors error) {
+		MiscellaneousService miscellaneousService = (MiscellaneousService) command;
+		
+		if (StringUtils.isBlank(miscellaneousService.getName())) {
+			error.reject("billing.name.required");
+		}
+		if (miscellaneousService.getPrice() == null) {
+			error.reject("billing.price.required");
+		}
+		
+		BillingService billingService = (BillingService) Context.getService(BillingService.class);
 		Integer miscellaneousServiceId = miscellaneousService.getId();
 		if (miscellaneousServiceId == null) {
 			if (billingService.getMiscellaneousServiceByName(miscellaneousService.getName()) != null) {
@@ -51,13 +50,13 @@ public class MiscellaneousServiceValidator implements Validator {
 			}
 		} else {
 			MiscellaneousService dbStore = billingService.getMiscellaneousServiceById(miscellaneousServiceId);
-			if (dbStore!= null && !dbStore.getName().equalsIgnoreCase(miscellaneousService.getName())) {
+			if (dbStore != null && !dbStore.getName().equalsIgnoreCase(miscellaneousService.getName())) {
 				if (billingService.getMiscellaneousServiceByName(miscellaneousService.getName()) != null) {
 					error.reject("billing.name.existed");
 				}
 			}
 		}
-    	
-    }
-
+		
+	}
+	
 }

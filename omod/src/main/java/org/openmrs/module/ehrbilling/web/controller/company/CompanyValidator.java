@@ -17,33 +17,32 @@ import org.openmrs.module.hospitalcore.model.Company;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-
 /**
  *
  */
 public class CompanyValidator implements Validator {
-
+	
 	/**
-     * @see Validator#supports(java.lang.Class)
-     */
-    public boolean supports(Class clazz) {
-    	return Company.class.equals(clazz);
-    }
-
+	 * @see Validator#supports(java.lang.Class)
+	 */
+	public boolean supports(Class clazz) {
+		return Company.class.equals(clazz);
+	}
+	
 	/**
-     * @see Validator#validate(java.lang.Object, Errors)
-     */
-    public void validate(Object command, Errors error) {
-    	Company company= (Company) command;
-    	
-    	if( StringUtils.isBlank(company.getName())){
-    		error.reject("billing.name.required");
-    	}
-    	
-    	BillingService billingService = (BillingService)Context.getService(BillingService.class);
+	 * @see Validator#validate(java.lang.Object, Errors)
+	 */
+	public void validate(Object command, Errors error) {
+		Company company = (Company) command;
+		
+		if (StringUtils.isBlank(company.getName())) {
+			error.reject("billing.name.required");
+		}
+		
+		BillingService billingService = (BillingService) Context.getService(BillingService.class);
 		Integer companyId = company.getCompanyId();
 		if (companyId == null) {
-			if (billingService.getCompanyByName(company.getName())!= null) {
+			if (billingService.getCompanyByName(company.getName()) != null) {
 				error.reject("billing.name.existed");
 			}
 		} else {
@@ -54,6 +53,6 @@ public class CompanyValidator implements Validator {
 				}
 			}
 		}
-    }
-
+	}
+	
 }

@@ -36,13 +36,13 @@ public class AmbulanceFormController {
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(java.lang.Boolean.class, new CustomBooleanEditor("true",
-		        "false", true));
+		binder.registerCustomEditor(java.lang.Boolean.class, new CustomBooleanEditor("true", "false", true));
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String firstView(@ModelAttribute("ambulance") Ambulance ambulance, @RequestParam(value="ambulanceId",required=false) Integer id, Model model) {
-		if( id != null ){
+	public String firstView(@ModelAttribute("ambulance") Ambulance ambulance,
+	        @RequestParam(value = "ambulanceId", required = false) Integer id, Model model) {
+		if (id != null) {
 			ambulance = Context.getService(BillingService.class).getAmbulanceById(id);
 			model.addAttribute(ambulance);
 		}
@@ -57,9 +57,9 @@ public class AmbulanceFormController {
 			return "/module/ehrbilling/ambulance/form";
 		}
 		BillingService billingService = Context.getService(BillingService.class);
-		if( ambulance.getRetired() ){
+		if (ambulance.getRetired()) {
 			ambulance.setRetiredDate(new Date());
-		}else{
+		} else {
 			ambulance.setCreatedDate(new Date());
 		}
 		billingService.saveAmbulance(ambulance);

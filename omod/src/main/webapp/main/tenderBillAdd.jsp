@@ -174,7 +174,7 @@
 		onsubmit="return false">
 		<div>
 			<input type="button" id="subm" onclick="validateForm()" name="subm"
-				value="<spring:message code='billing.bill.save'/>" /> <input
+				value="<spring:message code='ehrbilling.bill.save'/>" /> <input
 				type="button" value="<spring:message code='general.cancel'/>"
 				onclick="javascript:window.location.href='tenderBill.list?companyId=${companyId}'" />
 			<input type="button" id="toogleBillBtn" value="-"

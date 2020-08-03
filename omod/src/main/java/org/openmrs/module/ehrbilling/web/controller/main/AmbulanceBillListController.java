@@ -26,48 +26,49 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  *
  */
 @Controller
 @RequestMapping("/module/ehrbilling/ambulanceBill.list")
 public class AmbulanceBillListController {
-
-	@RequestMapping(method=RequestMethod.POST)
+	
+	@RequestMapping(method = RequestMethod.POST)
 	public String printBill(@RequestParam("ambulanceBillId") Integer ambulanceBillId,
-	                        @RequestParam("driverId") Integer driverId){
-		BillingService billingService = (BillingService)Context.getService(BillingService.class);
-    	AmbulanceBill ambulanceBill = billingService.getAmbulanceBillById(ambulanceBillId);
-    	if( ambulanceBill != null && !ambulanceBill.getPrinted()){
-    		ambulanceBill.setPrinted(true);
-    		billingService.saveAmbulanceBill(ambulanceBill);
-    	}
-    	return "redirect:/module/ehrbilling/ambulanceBill.list?driverId="+driverId;
+	        @RequestParam("driverId") Integer driverId) {
+		BillingService billingService = (BillingService) Context.getService(BillingService.class);
+		AmbulanceBill ambulanceBill = billingService.getAmbulanceBillById(ambulanceBillId);
+		if (ambulanceBill != null && !ambulanceBill.getPrinted()) {
+			ambulanceBill.setPrinted(true);
+			billingService.saveAmbulanceBill(ambulanceBill);
+		}
+		return "redirect:/module/ehrbilling/ambulanceBill.list?driverId=" + driverId;
 	}
-	@RequestMapping(method=RequestMethod.GET)
+	
+	@RequestMapping(method = RequestMethod.GET)
 	public String listBill(@RequestParam("driverId") Integer driverId,
-	                       @RequestParam(value="pageSize",required=false)  Integer pageSize, 
-	                       @RequestParam(value="currentPage",required=false)  Integer currentPage,
-	                       @RequestParam(value="ambulanceBillId",required=false) Integer ambulanceBillId,
-	                         Model model, HttpServletRequest request){
-		BillingService billingService = (BillingService)Context.getService(BillingService.class);
+	        @RequestParam(value = "pageSize", required = false) Integer pageSize,
+	        @RequestParam(value = "currentPage", required = false) Integer currentPage,
+	        @RequestParam(value = "ambulanceBillId", required = false) Integer ambulanceBillId, Model model,
+	        HttpServletRequest request) {
+		BillingService billingService = (BillingService) Context.getService(BillingService.class);
 		Driver driver = billingService.getDriverById(driverId);
-		if( driver != null ){
+		if (driver != null) {
 			int total = billingService.countListAmbulanceBillByDriver(driver);
 			PagingUtil pagingUtil = new PagingUtil(RequestUtil.getCurrentLink(request), pageSize, currentPage, total);
-			model.addAttribute("ambulanceBills", billingService.listAmbulanceBillByDriver(pagingUtil.getStartPos(), pagingUtil.getPageSize(), driver) );
+			model.addAttribute("ambulanceBills",
+			    billingService.listAmbulanceBillByDriver(pagingUtil.getStartPos(), pagingUtil.getPageSize(), driver));
 			model.addAttribute("pagingUtil", pagingUtil);
 			model.addAttribute("driver", driver);
 		}
-		if( ambulanceBillId != null ){
+		if (ambulanceBillId != null) {
 			AmbulanceBill ambulanceBill = billingService.getAmbulanceBillById(ambulanceBillId);
 			model.addAttribute("ambulanceBill", ambulanceBill);
 		}
 		model.addAttribute("driverId", driverId);
 		User user = Context.getAuthenticatedUser();
 		
-		model.addAttribute("canEdit", user.hasPrivilege(BillingConstants.PRIV_EDIT_BILL_ONCE_PRINTED) );
+		model.addAttribute("canEdit", user.hasPrivilege(BillingConstants.PRIV_EDIT_BILL_ONCE_PRINTED));
 		return "/module/ehrbilling/main/ambulanceBillList";
 	}
 }

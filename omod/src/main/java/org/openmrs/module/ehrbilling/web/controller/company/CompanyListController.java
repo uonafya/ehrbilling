@@ -28,61 +28,56 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  *
  */
 @Controller
 @RequestMapping("/module/ehrbilling/company.list")
 public class CompanyListController {
+	
 	Log log = LogFactory.getLog(getClass());
-    
-    @RequestMapping(method=RequestMethod.POST)
-    public String deleteCompanies(@RequestParam("ids") String[] ids,HttpServletRequest request){
-    	
-    	HttpSession httpSession = request.getSession();
-		Integer companyId  = null;
-		try{
-			BillingService billingService = (BillingService)Context.getService(BillingService.class);
-			if( ids != null && ids.length > 0 ){
-				for(String sId : ids )
-				{
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public String deleteCompanies(@RequestParam("ids") String[] ids, HttpServletRequest request) {
+		
+		HttpSession httpSession = request.getSession();
+		Integer companyId = null;
+		try {
+			BillingService billingService = (BillingService) Context.getService(BillingService.class);
+			if (ids != null && ids.length > 0) {
+				for (String sId : ids) {
 					companyId = Integer.parseInt(sId);
 					Company company = billingService.getCompanyById(companyId);
-					if( company!= null )
-					{
+					if (company != null) {
 						billingService.deleteCompany(company);
 					}
 				}
-				httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-		"ehrbilling.company.delete.done");
+				httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "ehrbilling.company.delete.done");
 			}
-		}catch (Exception e) {
-			httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-			"Can not delete company ");
+		}
+		catch (Exception e) {
+			httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Can not delete company ");
 			log.error(e);
-			httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-		"ehrbilling.company.delete.fail");
+			httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "ehrbilling.company.delete.fail");
 		}
 		
-    	
-    	return "redirect:/module/ehrbilling/company.list";
-    }
+		return "redirect:/module/ehrbilling/company.list";
+	}
 	
-    @RequestMapping(method=RequestMethod.GET)
-	public String listTender(@RequestParam(value="pageSize",required=false)  Integer pageSize, 
-	                         @RequestParam(value="currentPage",required=false)  Integer currentPage,
-	                         Map<String, Object> model, HttpServletRequest request){
+	@RequestMapping(method = RequestMethod.GET)
+	public String listTender(@RequestParam(value = "pageSize", required = false) Integer pageSize,
+	        @RequestParam(value = "currentPage", required = false) Integer currentPage, Map<String, Object> model,
+	        HttpServletRequest request) {
 		
 		BillingService billingService = Context.getService(BillingService.class);
 		
 		int total = billingService.countListCompany();
 		
-		PagingUtil pagingUtil = new PagingUtil( RequestUtil.getCurrentLink(request) , pageSize, currentPage, total );
+		PagingUtil pagingUtil = new PagingUtil(RequestUtil.getCurrentLink(request), pageSize, currentPage, total);
 		
 		List<Company> companies = billingService.listCompany(pagingUtil.getStartPos(), pagingUtil.getPageSize());
 		
-		model.put("companies", companies );
+		model.put("companies", companies);
 		
 		model.put("pagingUtil", pagingUtil);
 		

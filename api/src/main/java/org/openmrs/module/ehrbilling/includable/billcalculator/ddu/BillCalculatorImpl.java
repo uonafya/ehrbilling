@@ -17,10 +17,11 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 public class BillCalculatorImpl implements BillCalculator {
-
+	
 	/**
-	 * Get the percentage of price to pay If patient category is RSBY or BPL,
-	 * the bill should be 100% free
+	 * Get the percentage of price to pay If patient category is RSBY or BPL, the bill should be
+	 * 100% free
+	 * 
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -42,13 +43,14 @@ public class BillCalculatorImpl implements BillCalculator {
 				}
 			}
 		}
-
+		
 		return ratio;
 	}
-
+	
 	/**
-	 * Determine whether a bill should be free or not. If patient category is
-	 * RSBY or BPL, the bill should be treated as the free bill
+	 * Determine whether a bill should be free or not. If patient category is RSBY or BPL, the bill
+	 * should be treated as the free bill
+	 * 
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -57,7 +59,7 @@ public class BillCalculatorImpl implements BillCalculator {
 		String patientCategory = attributes.get("Patient Category");
 		String bplNumber = attributes.get("BPL Number");
 		String rsbyNumber = attributes.get("RSBY Number");
-
+		
 		if (!StringUtils.isBlank(patientCategory)) {
 			if (patientCategory.contains("RSBY")) {
 				if (!StringUtils.isBlank(rsbyNumber)) {
@@ -69,7 +71,7 @@ public class BillCalculatorImpl implements BillCalculator {
 				}
 			}
 		}
-
+		
 		return false;
 	}
 }

@@ -35,10 +35,10 @@ import java.util.Date;
 @RequestMapping("/module/ehrbilling/miscellaneousService.form")
 public class MiscellaneousServiceFormController {
 	
-	
 	@RequestMapping(method = RequestMethod.GET)
-	public String firstView(@ModelAttribute("miscellaneousService") MiscellaneousService miscellaneousService, @RequestParam(value="id",required=false) Integer id, Model model) {
-		if( id != null ){
+	public String firstView(@ModelAttribute("miscellaneousService") MiscellaneousService miscellaneousService,
+	        @RequestParam(value = "id", required = false) Integer id, Model model) {
+		if (id != null) {
 			miscellaneousService = Context.getService(BillingService.class).getMiscellaneousServiceById(id);
 			model.addAttribute(miscellaneousService);
 		}
@@ -48,8 +48,7 @@ public class MiscellaneousServiceFormController {
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(java.util.Date.class, new CustomDateEditor(Context.getDateFormat(), true));
-		binder.registerCustomEditor(java.lang.Boolean.class, new CustomBooleanEditor("true",
-		        "false", true));
+		binder.registerCustomEditor(java.lang.Boolean.class, new CustomBooleanEditor("true", "false", true));
 	}
 	
 	@RequestMapping(method = RequestMethod.POST)
@@ -59,9 +58,9 @@ public class MiscellaneousServiceFormController {
 			return "/module/ehrbilling/miscellaneousService/form";
 		}
 		BillingService billingService = Context.getService(BillingService.class);
-		if( miscellaneousService.getRetired()) {
+		if (miscellaneousService.getRetired()) {
 			miscellaneousService.setRetiredDate(new Date());
-		}		
+		}
 		miscellaneousService.setCreatedDate(new Date());
 		billingService.saveMiscellaneousService(miscellaneousService);
 		return "redirect:/module/ehrbilling/miscellaneousService.list";

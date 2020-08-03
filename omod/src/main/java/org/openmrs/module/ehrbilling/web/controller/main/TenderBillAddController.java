@@ -35,20 +35,22 @@ import java.util.List;
 @Controller
 @RequestMapping("/module/ehrbilling/addTenderBill.form")
 public class TenderBillAddController {
+	
 	Log log = LogFactory.getLog(getClass());
 	
-	@RequestMapping(method=RequestMethod.POST)
-	public String onSubmit(Model model,@RequestParam("companyId") Integer companyId,@RequestParam("tenderIds") Integer[] tenderIds, HttpServletRequest request,Object command, BindingResult binding ){
-
+	@RequestMapping(method = RequestMethod.POST)
+	public String onSubmit(Model model, @RequestParam("companyId") Integer companyId,
+	        @RequestParam("tenderIds") Integer[] tenderIds, HttpServletRequest request, Object command, BindingResult binding) {
+		
 		validateQty(tenderIds, binding, request);
-		if( binding.hasErrors()){
+		if (binding.hasErrors()) {
 			model.addAttribute("errors", binding.getAllErrors());
 			return "module/ehrbilling/main/tenderBillAdd";
 		}
 		
 		BillingService billingService = (BillingService) Context.getService(BillingService.class);
-
-		Company company =  billingService.getCompanyById(companyId);
+		
+		Company company = billingService.getCompanyById(companyId);
 		
 		TenderBill tenderBill = new TenderBill();
 		tenderBill.setCompany(company);
@@ -57,18 +59,18 @@ public class TenderBillAddController {
 		
 		Tender tender = null;
 		int quantity = 0;
-		Money itemAmount; 
+		Money itemAmount;
 		Money totalAmount = new Money(BigDecimal.ZERO);
 		for (Integer id : tenderIds) {
 			
 			tender = billingService.getTenderById(id);
-			quantity = Integer.parseInt(request.getParameter(id+"_qty"));
+			quantity = Integer.parseInt(request.getParameter(id + "_qty"));
 			itemAmount = new Money(tender.getPrice());
 			itemAmount = itemAmount.times(quantity);
 			totalAmount = totalAmount.plus(itemAmount);
 			
 			TenderBillItem item = new TenderBillItem();
-			item.setName(tender.getName()+"_"+tender.getNumber());
+			item.setName(tender.getName() + "_" + tender.getNumber());
 			item.setCreatedDate(new Date());
 			item.setTender(tender);
 			item.setUnitPrice(tender.getPrice());
@@ -80,37 +82,38 @@ public class TenderBillAddController {
 		tenderBill.setAmount(totalAmount.getAmount());
 		tenderBill.setReceipt(billingService.createReceipt());
 		tenderBill = billingService.saveTenderBill(tenderBill);
-
-		return "redirect:/module/ehrbilling/tenderBill.list?companyId="+companyId+"&tenderBillId="+tenderBill.getTenderBillId();
+		
+		return "redirect:/module/ehrbilling/tenderBill.list?companyId=" + companyId + "&tenderBillId="
+		        + tenderBill.getTenderBillId();
 	}
 	
-	@RequestMapping(method=RequestMethod.GET)
-	public String displayForm(@ModelAttribute("command") Object command, @RequestParam("companyId") Integer companyId, HttpServletRequest request, Model model){
-
+	@RequestMapping(method = RequestMethod.GET)
+	public String displayForm(@ModelAttribute("command") Object command, @RequestParam("companyId") Integer companyId,
+	        HttpServletRequest request, Model model) {
+		
 		BillingService billingService = (BillingService) Context.getService(BillingService.class);
 		
 		List<Tender> listTender = billingService.getActiveTenders();
 		
-		if( listTender == null || listTender.size() == 0  )
-		{
+		if (listTender == null || listTender.size() == 0) {
 			request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "No Tender Service found.");
-		}else {
+		} else {
 			model.addAttribute("listTender", listTender);
 		}
 		model.addAttribute("companyId", companyId);
 		return "module/ehrbilling/main/tenderBillAdd";
 	}
-
-	private void validateQty(Integer[] ids, BindingResult binding, HttpServletRequest request){
-		for( int id : ids){
+	
+	private void validateQty(Integer[] ids, BindingResult binding, HttpServletRequest request) {
+		for (int id : ids) {
 			try {
-	            Integer.parseInt(request.getParameter(id+"_qty"));
-            }
-            catch (Exception e) {
-            	binding.reject("billing.bill.quantity.invalid", "Quantity is invalid");
-            	return;
-            }
-				
+				Integer.parseInt(request.getParameter(id + "_qty"));
+			}
+			catch (Exception e) {
+				binding.reject("billing.bill.quantity.invalid", "Quantity is invalid");
+				return;
+			}
+			
 		}
 	}
 	

@@ -15,7 +15,7 @@
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <h2>
-	<spring:message code="billing.miscellaneousService.manage" />
+	<spring:message code="ehrbilling.miscellaneousService.manage" />
 </h2>
 
 <c:forEach items="${errors.allErrors}" var="error">
@@ -48,7 +48,7 @@
 				</spring:bind></td>
 		</tr>
 		<tr>
-			<td valign="top"><spring:message code="billing.description" />
+			<td valign="top"><spring:message code="ehrbilling.description" />
 			</td>
 			<td><spring:bind path="miscellaneousService.description">
 					<input type="text" name="${status.expression}"
@@ -59,7 +59,7 @@
 				</spring:bind></td>
 		</tr>
 		<tr>
-			<td valign="top"><spring:message code="billing.price" />
+			<td valign="top"><spring:message code="ehrbilling.price" />
 			</td>
 			<td><spring:bind path="miscellaneousService.price">
 					<input type="text" name="${status.expression}"

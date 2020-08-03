@@ -36,13 +36,13 @@ public class CompanyFormController {
 	
 	@InitBinder
 	public void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(java.lang.Boolean.class, new CustomBooleanEditor("true",
-		        "false", true));
+		binder.registerCustomEditor(java.lang.Boolean.class, new CustomBooleanEditor("true", "false", true));
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
-	public String firstView(@ModelAttribute("company") Company company, @RequestParam(value="companyId",required=false) Integer id, Model model) {
-		if( id != null ){
+	public String firstView(@ModelAttribute("company") Company company,
+	        @RequestParam(value = "companyId", required = false) Integer id, Model model) {
+		if (id != null) {
 			company = Context.getService(BillingService.class).getCompanyById(id);
 			model.addAttribute(company);
 		}
@@ -57,9 +57,9 @@ public class CompanyFormController {
 			return "/module/ehrbilling/company/form";
 		}
 		BillingService billingService = Context.getService(BillingService.class);
-		if( company.getRetired()){
+		if (company.getRetired()) {
 			company.setRetiredDate(new Date());
-		}else{
+		} else {
 			company.setCreatedDate(new Date());
 		}
 		billingService.saveCompany(company);

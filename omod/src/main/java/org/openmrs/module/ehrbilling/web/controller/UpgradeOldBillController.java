@@ -18,16 +18,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-
-
 @Controller
 @RequestMapping("/module/ehrbilling/upgradeOldBill.form")
 public class UpgradeOldBillController {
-
+	
 	private Log log = LogFactory.getLog(this.getClass());
 	
-	@RequestMapping(method=RequestMethod.GET)
-	public void main(){
+	@RequestMapping(method = RequestMethod.GET)
+	public void main() {
 		Context.getService(BillingService.class).updateOldBills();
 	}
 }

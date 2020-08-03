@@ -143,7 +143,7 @@ jQuery(document).ready(function(){
 	<form method="POST" id="billForm" onsubmit="return false">
 		<div>
 			<input type="button" onclick="submitBillForm()" id="subm" name="subm"
-				value="<spring:message code='billing.bill.save'/>" /> <input
+				value="<spring:message code='ehrbilling.bill.save'/>" /> <input
 				type="button" value="<spring:message code='general.cancel'/>"
 				onclick="javascript:window.location.href='patientServiceBill.list?patientId=${patientId}'" />
 			<!-- 

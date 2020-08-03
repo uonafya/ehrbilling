@@ -22,10 +22,11 @@ public class MaintainUtil {
 	public static void resetServiceOrderConceptId() {
 		System.out.println("=== resetServiceOrderId ===");
 		Concept concept = Context.getConceptService().getConcept(BillingConstants.SERVICE_ORDER_CONCEPT_NAME);
-		if(concept!=null){
-			GlobalPropertyUtil.setString(BillingConstants.PROPERTY_ROOT_SERVICE_CONCEPT_ID, concept.getConceptId().toString());
+		if (concept != null) {
+			GlobalPropertyUtil.setString(BillingConstants.PROPERTY_ROOT_SERVICE_CONCEPT_ID, concept.getConceptId()
+			        .toString());
 		} else {
 			System.out.println("CAN'T FOUND SERVICE ORDER CONCEPT");
-		}		
+		}
 	}
 }

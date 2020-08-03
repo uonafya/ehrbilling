@@ -26,48 +26,48 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 
-
 /**
  *
  */
 @Controller
 @RequestMapping("/module/ehrbilling/tenderBill.list")
 public class TenderBillListController {
-
-	@RequestMapping(method=RequestMethod.POST)
-	public String printBill(@RequestParam("tenderBillId") Integer tenderBillId,
-	                        @RequestParam("companyId") Integer companyId){
-		BillingService billingService = (BillingService)Context.getService(BillingService.class);
-    	TenderBill tenderBill = billingService.getTenderBillById(tenderBillId);
-    	if( tenderBill != null && !tenderBill.getPrinted()){
-    		tenderBill.setPrinted(true);
-    		billingService.saveTenderBill(tenderBill);
-    	}
-    	return "redirect:/module/ehrbilling/tenderBill.list?companyId="+companyId;
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public String printBill(@RequestParam("tenderBillId") Integer tenderBillId, @RequestParam("companyId") Integer companyId) {
+		BillingService billingService = (BillingService) Context.getService(BillingService.class);
+		TenderBill tenderBill = billingService.getTenderBillById(tenderBillId);
+		if (tenderBill != null && !tenderBill.getPrinted()) {
+			tenderBill.setPrinted(true);
+			billingService.saveTenderBill(tenderBill);
+		}
+		return "redirect:/module/ehrbilling/tenderBill.list?companyId=" + companyId;
 	}
-	@RequestMapping(method=RequestMethod.GET)
+	
+	@RequestMapping(method = RequestMethod.GET)
 	public String listBill(@RequestParam("companyId") Integer companyId,
-	                       @RequestParam(value="pageSize",required=false)  Integer pageSize, 
-	                       @RequestParam(value="currentPage",required=false)  Integer currentPage,
-	                       @RequestParam(value="tenderBillId",required=false) Integer tenderBillId,
-	                         Model model, HttpServletRequest request){
-		BillingService billingService = (BillingService)Context.getService(BillingService.class);
+	        @RequestParam(value = "pageSize", required = false) Integer pageSize,
+	        @RequestParam(value = "currentPage", required = false) Integer currentPage,
+	        @RequestParam(value = "tenderBillId", required = false) Integer tenderBillId, Model model,
+	        HttpServletRequest request) {
+		BillingService billingService = (BillingService) Context.getService(BillingService.class);
 		Company company = billingService.getCompanyById(companyId);
-		if( company != null ){
+		if (company != null) {
 			int total = billingService.countListTenderBillByCompany(company);
 			PagingUtil pagingUtil = new PagingUtil(RequestUtil.getCurrentLink(request), pageSize, currentPage, total);
-			model.addAttribute("tenderBills", billingService.listTenderBillByCompany(pagingUtil.getStartPos(), pagingUtil.getPageSize(), company) );
+			model.addAttribute("tenderBills",
+			    billingService.listTenderBillByCompany(pagingUtil.getStartPos(), pagingUtil.getPageSize(), company));
 			model.addAttribute("pagingUtil", pagingUtil);
 			model.addAttribute("company", company);
 		}
-		if( tenderBillId != null ){
+		if (tenderBillId != null) {
 			TenderBill tenderBill = billingService.getTenderBillById(tenderBillId);
 			model.addAttribute("tenderBill", tenderBill);
 		}
 		model.addAttribute("companyId", companyId);
 		User user = Context.getAuthenticatedUser();
 		
-		model.addAttribute("canEdit", user.hasPrivilege(BillingConstants.PRIV_EDIT_BILL_ONCE_PRINTED) );
+		model.addAttribute("canEdit", user.hasPrivilege(BillingConstants.PRIV_EDIT_BILL_ONCE_PRINTED));
 		return "/module/ehrbilling/main/tenderBillList";
 	}
 }

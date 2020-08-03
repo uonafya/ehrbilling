@@ -30,60 +30,62 @@ import org.springframework.web.bind.annotation.RequestParam;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
-
 /**
  *
  */
 @Controller
 @RequestMapping("/module/ehrbilling/patientServiceBill.list")
 public class BillableServiceBillListController {
-
-	@RequestMapping(method=RequestMethod.GET)
-	public String viewForm( Model model, @RequestParam("patientId") Integer patientId, @RequestParam(value="billId",required=false) Integer billId
-	                        ,@RequestParam(value="pageSize",required=false)  Integer pageSize, 
-		                    @RequestParam(value="currentPage",required=false)  Integer currentPage,
-		                    HttpServletRequest request){
+	
+	@RequestMapping(method = RequestMethod.GET)
+	public String viewForm(Model model, @RequestParam("patientId") Integer patientId,
+	        @RequestParam(value = "billId", required = false) Integer billId,
+	        @RequestParam(value = "pageSize", required = false) Integer pageSize,
+	        @RequestParam(value = "currentPage", required = false) Integer currentPage, HttpServletRequest request) {
 		
 		BillingService billingService = Context.getService(BillingService.class);
 		
 		Patient patient = Context.getPatientService().getPatient(patientId);
 		Map<String, String> attributes = PatientUtils.getAttributes(patient);
-		BillCalculatorService calculator = new BillCalculatorService();		
+		BillCalculatorService calculator = new BillCalculatorService();
 		
 		model.addAttribute("freeBill", calculator.isFreeBill(HospitalCoreUtils.buildParameters("attributes", attributes)));
 		
-		if( patient != null ){
+		if (patient != null) {
 			
 			int total = billingService.countListPatientServiceBillByPatient(patient);
 			// ghanshyam 12-sept-2012 Bug #357 [billing][3.2.7-SNAPSHOT] Error screen appears on clicking next page or changing page size in list of bills
-			PagingUtil pagingUtil = new PagingUtil(RequestUtil.getCurrentLink(request), pageSize, currentPage, total, patientId);
+			PagingUtil pagingUtil = new PagingUtil(RequestUtil.getCurrentLink(request), pageSize, currentPage, total,
+			        patientId);
 			model.addAttribute("pagingUtil", pagingUtil);
 			model.addAttribute("patient", patient);
-			model.addAttribute("listBill", billingService.listPatientServiceBillByPatient(pagingUtil.getStartPos(), pagingUtil.getPageSize(), patient));
+			model.addAttribute("listBill",
+			    billingService.listPatientServiceBillByPatient(pagingUtil.getStartPos(), pagingUtil.getPageSize(), patient));
 		}
-		if( billId != null ){
-			PatientServiceBill bill = billingService.getPatientServiceBillById(billId);			
+		if (billId != null) {
+			PatientServiceBill bill = billingService.getPatientServiceBillById(billId);
 			
 			bill.setFreeBill(calculator.isFreeBill(HospitalCoreUtils.buildParameters("attributes", attributes)));
 			model.addAttribute("bill", bill);
 		}
 		User user = Context.getAuthenticatedUser();
 		
-		model.addAttribute("canEdit", user.hasPrivilege(BillingConstants.PRIV_EDIT_BILL_ONCE_PRINTED) );		
+		model.addAttribute("canEdit", user.hasPrivilege(BillingConstants.PRIV_EDIT_BILL_ONCE_PRINTED));
 		return "/module/ehrbilling/main/billableServiceBillList";
 	}
-
-	@RequestMapping(method=RequestMethod.POST)
-	public String onSubmit(@RequestParam("patientId") Integer patientId, @RequestParam("billId") Integer billId){
-		BillingService billingService = (BillingService)Context.getService(BillingService.class);
-    	PatientServiceBill patientSerciceBill = billingService.getPatientServiceBillById(billId);
-    	if( patientSerciceBill != null && !patientSerciceBill.getPrinted()){
-    		patientSerciceBill.setPrinted(true);
-    		Map<String, String> attributes = PatientUtils.getAttributes(patientSerciceBill.getPatient());
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public String onSubmit(@RequestParam("patientId") Integer patientId, @RequestParam("billId") Integer billId) {
+		BillingService billingService = (BillingService) Context.getService(BillingService.class);
+		PatientServiceBill patientSerciceBill = billingService.getPatientServiceBillById(billId);
+		if (patientSerciceBill != null && !patientSerciceBill.getPrinted()) {
+			patientSerciceBill.setPrinted(true);
+			Map<String, String> attributes = PatientUtils.getAttributes(patientSerciceBill.getPatient());
 			BillCalculatorService calculator = new BillCalculatorService();
-			patientSerciceBill.setFreeBill(calculator.isFreeBill(HospitalCoreUtils.buildParameters("attributes", attributes)));			
-    		billingService.saveBillEncounterAndOrder(patientSerciceBill);
-    	}
-		return "redirect:/module/ehrbilling/patientServiceBill.list?patientId="+patientId;
+			patientSerciceBill
+			        .setFreeBill(calculator.isFreeBill(HospitalCoreUtils.buildParameters("attributes", attributes)));
+			billingService.saveBillEncounterAndOrder(patientSerciceBill);
+		}
+		return "redirect:/module/ehrbilling/patientServiceBill.list?patientId=" + patientId;
 	}
 }

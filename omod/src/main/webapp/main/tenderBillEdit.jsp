@@ -217,9 +217,9 @@
 		<input type="hidden" value="" name="action" id="action" />
 		<div>
 			<input type="button" onclick="validateForm()" id="subm" name="subm"
-				value="<spring:message code='billing.bill.save'/>" /> <input
+				value="<spring:message code='ehrbilling.bill.save'/>" /> <input
 				type="button" id="voi" onclick="voidBill()"
-				value="<spring:message code='billing.bill.void'/>" /> <input
+				value="<spring:message code='ehrbilling.bill.void'/>" /> <input
 				type="button" value="<spring:message code='general.cancel'/>"
 				onclick="javascript:window.location.href='tenderBill.list?companyId=${companyId}'" />
 			<input type="button" id="toogleBillBtn" value="-"

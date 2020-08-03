@@ -24,7 +24,7 @@
 <script type="text/javascript"
 	src="${pageContext.request.contextPath}/moduleResources/ehrbilling/scripts/jquery/jquery-1.4.2.min.js"></script>
 <h2>
-	<spring:message code="billing.miscellaneousService.manage" />
+	<spring:message code="ehrbilling.miscellaneousService.manage" />
 </h2>
 
 <br />
@@ -34,7 +34,7 @@
 	</span><
 </c:forEach>
 <input type="button"
-	value="<spring:message code='billing.miscellaneousService.add'/>"
+	value="<spring:message code='ehrbilling.miscellaneousService.add'/>"
 	onclick="javascript:window.location.href='miscellaneousService.form'" />
 
 <br />
@@ -43,9 +43,9 @@
 	<c:when test="${not empty miscellaneousServices}">
 		<form method="post" onsubmit="return false" id="form">
 			<input type="button" onclick="checkValue()"
-				value="<spring:message code='billing.miscellaneousService.deleteselected'/>" />
+				value="<spring:message code='ehrbilling.miscellaneousService.deleteselected'/>" />
 			<span class="boxHeader"><spring:message
-					code="billing.miscellaneousService.list" />
+					code="ehrbilling.miscellaneousService.list" />
 			</span>
 			<div class="box">
 				<table cellpadding="5" cellspacing="0">
@@ -53,9 +53,9 @@
 						<th>#</th>
 						<th><spring:message code="general.name" />
 						</th>
-						<th><spring:message code="billing.price" />
+						<th><spring:message code="ehrbilling.price" />
 						</th>
-						<th><spring:message code="billing.createddate" />
+						<th><spring:message code="ehrbilling.createddate" />
 						</th>
 						<th></th>
 					</tr>

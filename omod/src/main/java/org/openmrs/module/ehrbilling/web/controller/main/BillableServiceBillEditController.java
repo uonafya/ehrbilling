@@ -45,62 +45,53 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/module/ehrbilling/editPatientServiceBill.form")
 public class BillableServiceBillEditController {
-
+	
 	private Log logger = LogFactory.getLog(getClass());
-
+	
 	@RequestMapping(method = RequestMethod.GET)
-	public String viewForm(Model model, @RequestParam("billId") Integer billId,
-			@RequestParam("patientId") Integer patientId) {
-
-		BillingService billingService = Context
-				.getService(BillingService.class);
+	public String viewForm(Model model, @RequestParam("billId") Integer billId, @RequestParam("patientId") Integer patientId) {
+		
+		BillingService billingService = Context.getService(BillingService.class);
 		List<BillableService> services = billingService.getAllServices();
 		Map<Integer, BillableService> mapServices = new HashMap<Integer, BillableService>();
 		for (BillableService ser : services) {
 			mapServices.put(ser.getConceptId(), ser);
 		}
-		Integer conceptId = Integer.valueOf(Context.getAdministrationService()
-				.getGlobalProperty("billing.rootServiceConceptId"));
+		Integer conceptId = Integer.valueOf(Context.getAdministrationService().getGlobalProperty(
+		    "billing.rootServiceConceptId"));
 		Concept concept = Context.getConceptService().getConcept(conceptId);
-		model.addAttribute("tabs",
-				billingService.traversTab(concept, mapServices, 1));
+		model.addAttribute("tabs", billingService.traversTab(concept, mapServices, 1));
 		model.addAttribute("patientId", patientId);
-		PatientServiceBill bill = billingService
-				.getPatientServiceBillById(billId);
-
+		PatientServiceBill bill = billingService.getPatientServiceBillById(billId);
+		
 		model.addAttribute("bill", bill);
 		return "/module/ehrbilling/main/billableServiceBillEdit";
 	}
-
+	
 	@RequestMapping(method = RequestMethod.POST)
-	public String onSubmit(Model model, Object command,
-			BindingResult bindingResult, HttpServletRequest request,
-			@RequestParam("cons") Integer[] cons,
-			@RequestParam("patientId") Integer patientId,
-			@RequestParam("billId") Integer billId,
-			@RequestParam("action") String action,
-			@RequestParam(value = "description", required = false) String description) {
-
+	public String onSubmit(Model model, Object command, BindingResult bindingResult, HttpServletRequest request,
+	        @RequestParam("cons") Integer[] cons, @RequestParam("patientId") Integer patientId,
+	        @RequestParam("billId") Integer billId, @RequestParam("action") String action,
+	        @RequestParam(value = "description", required = false) String description) {
+		
 		validate(cons, bindingResult, request);
 		if (bindingResult.hasErrors()) {
 			model.addAttribute("errors", bindingResult.getAllErrors());
 			return "module/ehrbilling/main/patientServiceBillEdit";
 		}
-		BillingService billingService = Context
-				.getService(BillingService.class);
-
-		PatientServiceBill bill = billingService
-				.getPatientServiceBillById(billId);
-
+		BillingService billingService = Context.getService(BillingService.class);
+		
+		PatientServiceBill bill = billingService.getPatientServiceBillById(billId);
+		
 		// Get the BillCalculator to calculate the rate of bill item the patient
 		// has to pay
 		Patient patient = Context.getPatientService().getPatient(patientId);
 		Map<String, String> attributes = PatientUtils.getAttributes(patient);
 		BillCalculatorService calculator = new BillCalculatorService();
 		
-		if(!"".equals( description ))
+		if (!"".equals(description))
 			bill.setDescription(description);
-
+		
 		if ("void".equalsIgnoreCase(action)) {
 			bill.setVoided(true);
 			bill.setVoidedDate(new Date());
@@ -109,39 +100,38 @@ public class BillableServiceBillEditController {
 				item.setVoidedDate(new Date());
 				/* these 5 lines of code written only due to voided item is being updated in "billing_patient_service_bill_item" table
 				  but not being updated in "orders" table */
-				Order ord=item.getOrder();
-				if(ord!=null){
+				Order ord = item.getOrder();
+				if (ord != null) {
 					ord.setVoided(true);
 					ord.setDateVoided(new Date());
-					}
-					item.setOrder(ord);
+				}
+				item.setOrder(ord);
 			}
 			billingService.savePatientServiceBill(bill);
-
-			return "redirect:/module/billing/patientServiceBillEdit.list?patientId="
-					+ patientId;
+			
+			return "redirect:/module/ehrbilling/patientServiceBillEdit.list?patientId=" + patientId;
 		}
-
+		
 		// void old items and reset amount
 		Map<Integer, PatientServiceBillItem> mapOldItems = new HashMap<Integer, PatientServiceBillItem>();
 		for (PatientServiceBillItem item : bill.getBillItems()) {
 			item.setVoided(true);
 			item.setVoidedDate(new Date());
 			// Bug #323 [BILLING] When a bill with a lab\radiology order is edited the order is re-sent
-			Order ord=item.getOrder();
+			Order ord = item.getOrder();
 			/*[Billing - Bug error in edit bill.
 			  the problem was while we are editing the bill of other than lab and radiology.
 			*/
-			if(ord!=null){
-			ord.setVoided(true);	
-			ord.setDateVoided(new Date());
+			if (ord != null) {
+				ord.setVoided(true);
+				ord.setDateVoided(new Date());
 			}
 			item.setOrder(ord);
 			mapOldItems.put(item.getPatientServiceBillItemId(), item);
 		}
 		bill.setAmount(BigDecimal.ZERO);
 		bill.setPrinted(false);
-
+		
 		PatientServiceBillItem item;
 		int quantity = 0;
 		Money itemAmount;
@@ -151,35 +141,31 @@ public class BillableServiceBillEditController {
 		BigDecimal unitPrice;
 		String name;
 		BillableService service;
-
+		
 		for (int conceptId : cons) {
-
-			unitPrice = NumberUtils.createBigDecimal(request
-					.getParameter(conceptId + "_unitPrice"));
-			quantity = NumberUtils.createInteger(request.getParameter(conceptId
-					+ "_qty"));
+			
+			unitPrice = NumberUtils.createBigDecimal(request.getParameter(conceptId + "_unitPrice"));
+			quantity = NumberUtils.createInteger(request.getParameter(conceptId + "_qty"));
 			name = request.getParameter(conceptId + "_name");
 			service = billingService.getServiceByConceptId(conceptId);
-
+			
 			mUnitPrice = new Money(unitPrice);
 			itemAmount = mUnitPrice.times(quantity);
 			totalAmount = totalAmount.plus(itemAmount);
-
+			
 			String sItemId = request.getParameter(conceptId + "_itemId");
-
+			
 			if (sItemId == null) {
 				item = new PatientServiceBillItem();
-
+				
 				// Get the ratio for each bill item
-				Map<String, Object> parameters = HospitalCoreUtils
-						.buildParameters("patient", patient, "attributes",
-								attributes, "billItem", item);
+				Map<String, Object> parameters = HospitalCoreUtils.buildParameters("patient", patient, "attributes",
+				    attributes, "billItem", item);
 				BigDecimal rate = calculator.getRate(parameters);
-
+				
 				item.setAmount(itemAmount.getAmount());
 				item.setActualAmount(item.getAmount().multiply(rate));
-				totalActualAmount = totalActualAmount.add(item
-						.getActualAmount());
+				totalActualAmount = totalActualAmount.add(item.getActualAmount());
 				item.setCreatedDate(new Date());
 				item.setName(name);
 				item.setPatientServiceBill(bill);
@@ -188,71 +174,65 @@ public class BillableServiceBillEditController {
 				item.setUnitPrice(unitPrice);
 				bill.addBillItem(item);
 			} else {
-
+				
 				item = mapOldItems.get(Integer.parseInt(sItemId));
-
+				
 				// Get the ratio for each bill item
-				Map<String, Object> parameters = HospitalCoreUtils
-						.buildParameters("patient", patient, "attributes",
-								attributes, "billItem", item);
+				Map<String, Object> parameters = HospitalCoreUtils.buildParameters("patient", patient, "attributes",
+				    attributes, "billItem", item);
 				BigDecimal rate = calculator.getRate(parameters);
-
+				
 				// Edited Quantity and Amount information is lost in database
-				if(quantity!=item.getQuantity()){
+				if (quantity != item.getQuantity()) {
 					item.setVoided(true);
 					item.setVoidedDate(new Date());
-				}
-				else{
+				} else {
 					item.setVoided(false);
-					item.setVoidedDate(null);	
+					item.setVoidedDate(null);
 				}
 				// Bug When a bill with a lab\radiology order is edited the order is re-sent
-				Order ord=item.getOrder();
-				if(ord!=null){
+				Order ord = item.getOrder();
+				if (ord != null) {
 					ord.setVoided(false);
 					ord.setDateVoided(null);
-					}
+				}
 				item.setOrder(ord);
 				// Edited Quantity and Amount information is lost in database
-				if(quantity!=item.getQuantity()){
-				item = new PatientServiceBillItem();
-				item.setService(service);
-				item.setUnitPrice(unitPrice);
-				item.setQuantity(quantity);
-			    item.setName(name);
-			    item.setCreatedDate(new Date());
-			    item.setOrder(ord);
-			    bill.addBillItem(item);
+				if (quantity != item.getQuantity()) {
+					item = new PatientServiceBillItem();
+					item.setService(service);
+					item.setUnitPrice(unitPrice);
+					item.setQuantity(quantity);
+					item.setName(name);
+					item.setCreatedDate(new Date());
+					item.setOrder(ord);
+					bill.addBillItem(item);
 				}
 				item.setAmount(itemAmount.getAmount());
 				item.setActualAmount(item.getAmount().multiply(rate));
-				totalActualAmount = totalActualAmount.add(item
-						.getActualAmount());
+				totalActualAmount = totalActualAmount.add(item.getActualAmount());
 			}
 		}
 		bill.setAmount(totalAmount.getAmount());
 		bill.setActualAmount(totalActualAmount);
-
+		
 		// Determine whether the bill is free or not
-
-		bill.setFreeBill(calculator.isFreeBill(HospitalCoreUtils
-				.buildParameters("attributes", attributes)));
+		
+		bill.setFreeBill(calculator.isFreeBill(HospitalCoreUtils.buildParameters("attributes", attributes)));
 		logger.info("Is free bill: " + bill.getFreeBill());
-
+		
 		bill = billingService.savePatientServiceBill(bill);
 		//No Queue to be generated from Old bill
-		return "redirect:/module/billing/patientServiceBillEdit.list?patientId="
-				+ patientId + "&billId=" + billId;
+		return "redirect:/module/billing/patientServiceBillEdit.list?patientId=" + patientId + "&billId=" + billId;
 	}
-
-	private void validate(Integer[] ids, BindingResult binding,
-			HttpServletRequest request) {
-		for (int id : ids) {
+	
+	private void validate(Integer[] ids, BindingResult binding, HttpServletRequest request) {
+		for (Integer id : ids) {
 			try {
 				Integer.parseInt(request.getParameter(id + "_qty"));
-			} catch (Exception e) {
-				binding.reject("billing.bill.quantity.invalid",
-						"Quantity is invalid");
+			}
+			catch (Exception e) {
+				binding.reject("billing.bill.quantity.invalid", "Quantity is invalid");
 				return;
 			}
 		}

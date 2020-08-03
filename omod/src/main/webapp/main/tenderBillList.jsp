@@ -59,7 +59,7 @@
 			</tr>
 		</table>
 		<table width="100%" border="1">
-			<tr> <!-- Sept 22,2012 -- Sagar Bele -- Issue 387 --Adjust allignment in table-->
+			<tr> <!--Adjust allignment in table-->
 				<th align="center">Service Name</th>
 				<th align="center">Price (Rs)</th>
 				<th align="center">Quantity</th>
@@ -79,7 +79,7 @@
 					<td align="right">${bill.amount}</td>
 				</tr>
 			</c:forEach>
-			<tr> <!-- Sept 22,2012 -- Sagar Bele -- Issue 387 --Adjust allignment in table-->
+			<tr> <!--Adjust allignment in table-->
 				<td colspan="3" align="right"><b>Total</td>
 				<td align="right">${tenderBill.amount}</td>
 			</tr>

@@ -33,70 +33,65 @@ import java.util.List;
 @Controller
 @RequestMapping("/module/ehrbilling/editMiscellaneousServiceBill.form")
 public class MiscellaneousServiceBillEditController {
+	
 	Log log = LogFactory.getLog(getClass());
 	
-	@RequestMapping(method=RequestMethod.POST)
-	public String onSubmit(Model model,
-			@RequestParam(value = "serviceId") Integer miscellaneousServiceId, 
-			@RequestParam("billId") Integer billId,
-			@RequestParam("name") String name,
-			@RequestParam("action") String action,
-			Object command, BindingResult binding,HttpServletRequest request ){
-
+	@RequestMapping(method = RequestMethod.POST)
+	public String onSubmit(Model model, @RequestParam(value = "serviceId") Integer miscellaneousServiceId,
+	        @RequestParam("billId") Integer billId, @RequestParam("name") String name,
+	        @RequestParam("action") String action, Object command, BindingResult binding, HttpServletRequest request) {
 		
 		BillingService billingService = (BillingService) Context.getService(BillingService.class);
 		MiscellaneousServiceBill miscellaneousServiceBill = billingService.getMiscellaneousServiceBillById(billId);
 		
 		// if action is void
-		if( "void".equalsIgnoreCase(action)){
+		if ("void".equalsIgnoreCase(action)) {
 			miscellaneousServiceBill.setVoided(true);
 			billingService.saveMiscellaneousServiceBill(miscellaneousServiceBill);
 			return "redirect:/module/ehrbilling/miscellaneousServiceBill.list";
 		}
 		
-
 		MiscellaneousService miscellaneousService = null;
 		int quantity = 0;
 		Money itemAmount;
 		Money totalAmount = new Money(BigDecimal.ZERO);
 		
 		miscellaneousService = billingService.getMiscellaneousServiceById(miscellaneousServiceId);
-		quantity =Integer.parseInt(request.getParameter(miscellaneousServiceId+"_qty"));
-		itemAmount = new Money(new BigDecimal(request.getParameter(miscellaneousServiceId+"_amount")));
+		quantity = Integer.parseInt(request.getParameter(miscellaneousServiceId + "_qty"));
+		itemAmount = new Money(new BigDecimal(request.getParameter(miscellaneousServiceId + "_amount")));
 		
 		itemAmount = itemAmount.times(quantity);
-		totalAmount = totalAmount.plus(itemAmount);	
+		totalAmount = totalAmount.plus(itemAmount);
 		miscellaneousServiceBill.setLiableName(name);
 		
-		 miscellaneousService = billingService.getMiscellaneousServiceById(miscellaneousServiceId);
+		miscellaneousService = billingService.getMiscellaneousServiceById(miscellaneousServiceId);
 		miscellaneousServiceBill.setAmount(totalAmount.getAmount());
 		miscellaneousServiceBill.setService(miscellaneousService);
 		miscellaneousServiceBill.setQuantity(quantity);
 		miscellaneousServiceBill = billingService.saveMiscellaneousServiceBill(miscellaneousServiceBill);
-
 		
-		return "redirect:/module/ehrbilling/miscellaneousServiceBill.list?serviceId="+miscellaneousServiceId+"&billId="+miscellaneousServiceBill.getId();
+		return "redirect:/module/ehrbilling/miscellaneousServiceBill.list?serviceId=" + miscellaneousServiceId + "&billId="
+		        + miscellaneousServiceBill.getId();
 	}
 	
-	@RequestMapping(method=RequestMethod.GET)
-	public String displayForm(@ModelAttribute("command") Object command, @RequestParam("billId") Integer billId,  HttpServletRequest request, Model model){
-
+	@RequestMapping(method = RequestMethod.GET)
+	public String displayForm(@ModelAttribute("command") Object command, @RequestParam("billId") Integer billId,
+	        HttpServletRequest request, Model model) {
+		
 		BillingService billingService = (BillingService) Context.getService(BillingService.class);
 		
 		List<MiscellaneousService> listMiscellaneousService = billingService.getAllMiscellaneousService();
 		
-		if( listMiscellaneousService == null || listMiscellaneousService.size() == 0  )
-		{
+		if (listMiscellaneousService == null || listMiscellaneousService.size() == 0) {
 			request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "No MiscellaneousService found.");
-		}else {
+		} else {
 			model.addAttribute("listMiscellaneousService", listMiscellaneousService);
 		}
 		
-		MiscellaneousServiceBill bill = billingService.getMiscellaneousServiceBillById(billId);		
+		MiscellaneousServiceBill bill = billingService.getMiscellaneousServiceBillById(billId);
 		model.addAttribute("bill", bill);
 		
 		return "module/ehrbilling/main/miscellaneousServiceBillEdit";
 	}
-
 	
 }

@@ -18,11 +18,11 @@
 <%@ include file="/WEB-INF/template/header.jsp"%>
 
 <link type="text/css" rel="stylesheet"
-	href="${pageContext.request.contextPath}/moduleResources/billing/styles/paging.css" />
+	href="${pageContext.request.contextPath}/moduleResources/ehrbilling/styles/paging.css" />
 <script type="text/javascript"
-	src="${pageContext.request.contextPath}/moduleResources/billing/scripts/paging.js"></script>
+	src="${pageContext.request.contextPath}/moduleResources/ehrbilling/scripts/paging.js"></script>
 <script type="text/javascript"
-	src="${pageContext.request.contextPath}/moduleResources/billing/scripts/jquery/jquery-1.4.2.min.js"></script>
+	src="${pageContext.request.contextPath}/moduleResources/ehrbilling/scripts/jquery/jquery-1.4.2.min.js"></script>
 <h2>
 	<spring:message code="ehrbilling.ambulance.manage" />
 </h2>
@@ -34,7 +34,7 @@
 	</span><
 </c:forEach>
 <input type="button"
-	value="<spring:message code='billing.ambulance.add'/>"
+	value="<spring:message code='ehrbilling.ambulance.add'/>"
 	onclick="javascript:window.location.href='ambulance.form'" />
 
 <br />
@@ -43,7 +43,7 @@
 	<c:when test="${not empty ambulances}">
 		<form method="post" onsubmit="return false" id="form">
 			<input type="button" onclick="checkValue()"
-				value="<spring:message code='billing.ambulance.deleteselected'/>" />
+				value="<spring:message code='ehrbilling.ambulance.deleteselected'/>" />
 			<span class="boxHeader"><spring:message
 					code="ehrbilling.ambulance.list" />
 			</span>
@@ -53,9 +53,9 @@
 						<th>#</th>
 						<th><spring:message code="general.name" />
 						</th>
-						<th><spring:message code="billing.description" />
+						<th><spring:message code="ehrbilling.description" />
 						</th>
-						<th><spring:message code="billing.createddate" />
+						<th><spring:message code="ehrbilling.createddate" />
 						</th>
 						<th></th>
 					</tr>

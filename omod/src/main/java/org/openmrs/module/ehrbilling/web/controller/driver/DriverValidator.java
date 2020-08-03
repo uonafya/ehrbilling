@@ -17,33 +17,32 @@ import org.openmrs.module.hospitalcore.model.Driver;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-
 /**
  *
  */
 public class DriverValidator implements Validator {
-
+	
 	/**
-     * @see Validator#supports(java.lang.Class)
-     */
-    public boolean supports(Class clazz) {
-    	return Driver.class.equals(clazz);
-    }
-
+	 * @see Validator#supports(java.lang.Class)
+	 */
+	public boolean supports(Class clazz) {
+		return Driver.class.equals(clazz);
+	}
+	
 	/**
-     * @see Validator#validate(java.lang.Object, Errors)
-     */
-    public void validate(Object command, Errors error) {
-    	Driver driver = (Driver) command;
-    	
-    	if( StringUtils.isBlank(driver.getName())){
-    		error.reject("billing.name.required");
-    	}
-    	
-    	BillingService billingService = (BillingService)Context.getService(BillingService.class);
+	 * @see Validator#validate(java.lang.Object, Errors)
+	 */
+	public void validate(Object command, Errors error) {
+		Driver driver = (Driver) command;
+		
+		if (StringUtils.isBlank(driver.getName())) {
+			error.reject("billing.name.required");
+		}
+		
+		BillingService billingService = (BillingService) Context.getService(BillingService.class);
 		Integer driverId = driver.getDriverId();
 		if (driverId == null) {
-			if (billingService.getDriverByName(driver.getName())!= null) {
+			if (billingService.getDriverByName(driver.getName()) != null) {
 				error.reject("billing.name.existed");
 			}
 		} else {
@@ -54,6 +53,6 @@ public class DriverValidator implements Validator {
 				}
 			}
 		}
-    }
-
+	}
+	
 }

@@ -27,59 +27,56 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  *
  */
 @Controller
 @RequestMapping("/module/ehrbilling/tender.list")
 public class TenderListController {
+	
 	Log log = LogFactory.getLog(getClass());
-    
-    @RequestMapping(method=RequestMethod.POST)
-    public String deleteTenders(@RequestParam("ids") String[] ids,HttpServletRequest request){
-    	
-    	HttpSession httpSession = request.getSession();
-		Integer tenderId  = null;
-		try{
-			BillingService billingService = (BillingService)Context.getService(BillingService.class);
-			if( ids != null && ids.length > 0 ){
-				for(String sId : ids )
-				{
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public String deleteTenders(@RequestParam("ids") String[] ids, HttpServletRequest request) {
+		
+		HttpSession httpSession = request.getSession();
+		Integer tenderId = null;
+		try {
+			BillingService billingService = (BillingService) Context.getService(BillingService.class);
+			if (ids != null && ids.length > 0) {
+				for (String sId : ids) {
 					tenderId = Integer.parseInt(sId);
 					Tender tender = billingService.getTenderById(tenderId);
-					if( tender != null )
-					{
+					if (tender != null) {
 						billingService.deleteTender(tender);
 					}
 				}
 			}
-		}catch (Exception e) {
-			httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-			"Can not delete tender because it has link to bill ");
+		}
+		catch (Exception e) {
+			httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Can not delete tender because it has link to bill ");
 			log.error(e);
 			return "redirect:/module/ehrbilling/tender.list";
 		}
-		httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-		"Tender.deleted");
-    	
-    	return "redirect:/module/ehrbilling/tender.list";
-    }
+		httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Tender.deleted");
+		
+		return "redirect:/module/ehrbilling/tender.list";
+	}
 	
-    @RequestMapping(method=RequestMethod.GET)
-	public String listTender(@RequestParam(value="pageSize",required=false)  Integer pageSize, 
-	                         @RequestParam(value="currentPage",required=false)  Integer currentPage,
-	                         Map<String, Object> model, HttpServletRequest request){
+	@RequestMapping(method = RequestMethod.GET)
+	public String listTender(@RequestParam(value = "pageSize", required = false) Integer pageSize,
+	        @RequestParam(value = "currentPage", required = false) Integer currentPage, Map<String, Object> model,
+	        HttpServletRequest request) {
 		
 		BillingService billingService = Context.getService(BillingService.class);
 		
 		int total = billingService.countListTender();
 		
-		PagingUtil pagingUtil = new PagingUtil( RequestUtil.getCurrentLink(request) , pageSize, currentPage, total );
+		PagingUtil pagingUtil = new PagingUtil(RequestUtil.getCurrentLink(request), pageSize, currentPage, total);
 		
 		List<Tender> tenders = billingService.listTender(pagingUtil.getStartPos(), pagingUtil.getPageSize());
 		
-		model.put("tenders", tenders );
+		model.put("tenders", tenders);
 		
 		model.put("pagingUtil", pagingUtil);
 		

@@ -37,13 +37,12 @@ public class BillCalculatorImpl implements BillCalculator {
 		Map<String, String> attributes = (Map<String, String>) parameters.get("attributes");
 		String patientCategory = attributes.get("Patient Category");
 		PatientServiceBillItem item = (PatientServiceBillItem) parameters.get("billItem");
-		if(patientCategory!=null){
+		if (patientCategory != null) {
 			
-		if (patientCategory.contains("General")) {
-			rate = new BigDecimal(1);
-		 }
-		}
-		else{
+			if (patientCategory.contains("General")) {
+				rate = new BigDecimal(1);
+			}
+		} else {
 			rate = new BigDecimal(1);
 		}
 		
@@ -85,13 +84,12 @@ public class BillCalculatorImpl implements BillCalculator {
 	public boolean isFreeBill(Map<String, Object> parameters) {
 		Map<String, String> attributes = (Map<String, String>) parameters.get("attributes");
 		String patientCategory = attributes.get("Patient Category");
-		if(patientCategory!=null){
-
-		if (patientCategory.contains("General")) {
-			return false;
-		 }
-		}
-		else{
+		if (patientCategory != null) {
+			
+			if (patientCategory.contains("General")) {
+				return false;
+			}
+		} else {
 			return false;
 		}
 		return true;

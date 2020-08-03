@@ -36,19 +36,20 @@ import java.util.Map;
 @Controller
 @RequestMapping("/module/ehrbilling/editTenderBill.form")
 public class TenderBillEditController {
+	
 	Log log = LogFactory.getLog(getClass());
 	
-	@RequestMapping(method=RequestMethod.GET)
-	public String displayForm(@RequestParam("companyId") Integer companyId, @RequestParam("tenderBillId") Integer tenderBillId, HttpServletRequest request, Model model){
-
+	@RequestMapping(method = RequestMethod.GET)
+	public String displayForm(@RequestParam("companyId") Integer companyId,
+	        @RequestParam("tenderBillId") Integer tenderBillId, HttpServletRequest request, Model model) {
+		
 		BillingService billingService = (BillingService) Context.getService(BillingService.class);
 		
 		List<Tender> listTender = billingService.getActiveTenders();
 		
-		if( listTender == null || listTender.size() == 0  )
-		{
+		if (listTender == null || listTender.size() == 0) {
 			request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "No Tender Service found.");
-		}else {
+		} else {
 			model.addAttribute("listTender", listTender);
 		}
 		model.addAttribute("companyId", companyId);
@@ -59,38 +60,36 @@ public class TenderBillEditController {
 		return "module/ehrbilling/main/tenderBillEdit";
 	}
 	
-	@RequestMapping(method=RequestMethod.POST)
-	public String onSubmit(Model model,@RequestParam("tenderBillId") Integer tenderBillId,
-	                       @RequestParam("companyId") Integer companyId,
-	                       @RequestParam("tenderIds") Integer[] tenderIds,
-	                       @RequestParam("action") String action,
-	                       HttpServletRequest request,Object command, BindingResult binding ){
-
+	@RequestMapping(method = RequestMethod.POST)
+	public String onSubmit(Model model, @RequestParam("tenderBillId") Integer tenderBillId,
+	        @RequestParam("companyId") Integer companyId, @RequestParam("tenderIds") Integer[] tenderIds,
+	        @RequestParam("action") String action, HttpServletRequest request, Object command, BindingResult binding) {
+		
 		validateQty(tenderIds, binding, request);
-		if( binding.hasErrors()){
+		if (binding.hasErrors()) {
 			model.addAttribute("errors", binding.getAllErrors());
 			return "module/ehrbilling/main/tenderBillAdd";
 		}
 		
 		BillingService billingService = (BillingService) Context.getService(BillingService.class);
-
+		
 		TenderBill tenderBill = billingService.getTenderBillById(tenderBillId);
-		if( "void".equalsIgnoreCase(action)){
+		if ("void".equalsIgnoreCase(action)) {
 			tenderBill.setVoided(true);
 			tenderBill.setVoidedDate(new Date());
-			for(TenderBillItem item:tenderBill.getBillItems()){
+			for (TenderBillItem item : tenderBill.getBillItems()) {
 				item.setVoided(true);
 				item.setVoidedDate(new Date());
 			}
 			billingService.saveTenderBill(tenderBill);
-			return "redirect:/module/ehrbilling/tenderBill.list?companyId="+companyId;
+			return "redirect:/module/ehrbilling/tenderBill.list?companyId=" + companyId;
 		}
 		
 		tenderBill.setPrinted(false);
 		
 		// void old items and reset amount
-		Map<Integer,TenderBillItem> mapOldItems = new HashMap<Integer, TenderBillItem>();
-		for( TenderBillItem item : tenderBill.getBillItems()){
+		Map<Integer, TenderBillItem> mapOldItems = new HashMap<Integer, TenderBillItem>();
+		for (TenderBillItem item : tenderBill.getBillItems()) {
 			item.setVoided(true);
 			item.setVoidedDate(new Date());
 			mapOldItems.put(item.getTenderBillItemId(), item);
@@ -99,28 +98,28 @@ public class TenderBillEditController {
 		
 		Tender tender = null;
 		int quantity = 0;
-		Money itemAmount; 
+		Money itemAmount;
 		Money totalAmount = new Money(BigDecimal.ZERO);
 		TenderBillItem item;
 		for (Integer id : tenderIds) {
 			
 			tender = billingService.getTenderById(id);
-			quantity = Integer.parseInt(request.getParameter(id+"_qty"));
+			quantity = Integer.parseInt(request.getParameter(id + "_qty"));
 			itemAmount = new Money(tender.getPrice());
 			itemAmount = itemAmount.times(quantity);
 			totalAmount = totalAmount.plus(itemAmount);
 			
-			String sItemId = request.getParameter(id+"_itemId");
+			String sItemId = request.getParameter(id + "_itemId");
 			
-			if( sItemId != null ){
+			if (sItemId != null) {
 				item = mapOldItems.get(Integer.parseInt(sItemId));
 				item.setVoided(false);
 				item.setVoidedDate(null);
 				item.setQuantity(quantity);
 				item.setAmount(itemAmount.getAmount());
-			}else{
+			} else {
 				item = new TenderBillItem();
-				item.setName(tender.getName()+"_"+tender.getNumber());
+				item.setName(tender.getName() + "_" + tender.getNumber());
 				item.setCreatedDate(new Date());
 				item.setTender(tender);
 				item.setUnitPrice(tender.getPrice());
@@ -132,20 +131,21 @@ public class TenderBillEditController {
 		}
 		tenderBill.setAmount(totalAmount.getAmount());
 		tenderBill = billingService.saveTenderBill(tenderBill);
-
-		return "redirect:/module/ehrbilling/tenderBill.list?companyId="+companyId+"&tenderBillId="+tenderBill.getTenderBillId();
+		
+		return "redirect:/module/ehrbilling/tenderBill.list?companyId=" + companyId + "&tenderBillId="
+		        + tenderBill.getTenderBillId();
 	}
 	
-	private void validateQty(Integer[] ids, BindingResult binding, HttpServletRequest request){
-		for( int id : ids){
+	private void validateQty(Integer[] ids, BindingResult binding, HttpServletRequest request) {
+		for (int id : ids) {
 			try {
-	            Integer.parseInt(request.getParameter(id+"_qty"));
-            }
-            catch (Exception e) {
-            	binding.reject("billing.bill.quantity.invalid", "Quantity is invalid");
-            	return;
-            }
-				
+				Integer.parseInt(request.getParameter(id + "_qty"));
+			}
+			catch (Exception e) {
+				binding.reject("billing.bill.quantity.invalid", "Quantity is invalid");
+				return;
+			}
+			
 		}
 	}
 }

@@ -28,59 +28,59 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  *
  */
 @Controller
 @RequestMapping("/module/ehrbilling/miscellaneousService.list")
 public class MiscellaneousServiceListController {
+	
 	Log log = LogFactory.getLog(getClass());
-    
-    @RequestMapping(method=RequestMethod.POST)
-    public String deleteMiscellaneousServices(@RequestParam("ids") String[] ids,HttpServletRequest request){
-    	
-    	HttpSession httpSession = request.getSession();
-		Integer miscellaneousServiceId  = null;
-		try{
-			BillingService billingService = (BillingService)Context.getService(BillingService.class);
-			if( ids != null && ids.length > 0 ){
-				for(String sId : ids )
-				{
+	
+	@RequestMapping(method = RequestMethod.POST)
+	public String deleteMiscellaneousServices(@RequestParam("ids") String[] ids, HttpServletRequest request) {
+		
+		HttpSession httpSession = request.getSession();
+		Integer miscellaneousServiceId = null;
+		try {
+			BillingService billingService = (BillingService) Context.getService(BillingService.class);
+			if (ids != null && ids.length > 0) {
+				for (String sId : ids) {
 					miscellaneousServiceId = Integer.parseInt(sId);
-					MiscellaneousService miscellaneousService = billingService.getMiscellaneousServiceById(miscellaneousServiceId);
-					if( miscellaneousService != null )
-					{
+					MiscellaneousService miscellaneousService = billingService
+					        .getMiscellaneousServiceById(miscellaneousServiceId);
+					if (miscellaneousService != null) {
 						billingService.deleteMiscellaneousService(miscellaneousService);
 					}
 				}
 			}
-		}catch (Exception e) {
+		}
+		catch (Exception e) {
 			httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-			"Can not delete miscellaneousService because it has link to bill ");
+			    "Can not delete miscellaneousService because it has link to bill ");
 			log.error(e);
 			return "redirect:/module/ehrbilling/miscellaneousService.list";
 		}
-		httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-		"MiscellaneousService.deleted");
-    	
-    	return "redirect:/module/ehrbilling/miscellaneousService.list";
-    }
+		httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "MiscellaneousService.deleted");
+		
+		return "redirect:/module/ehrbilling/miscellaneousService.list";
+	}
 	
-    @RequestMapping(method=RequestMethod.GET)
-	public String listMiscellaneousService(@RequestParam(value="pageSize",required=false)  Integer pageSize, 
-	                         @RequestParam(value="currentPage",required=false)  Integer currentPage,
-	                         Map<String, Object> model, HttpServletRequest request){
+	@RequestMapping(method = RequestMethod.GET)
+	public String listMiscellaneousService(@RequestParam(value = "pageSize", required = false) Integer pageSize,
+	        @RequestParam(value = "currentPage", required = false) Integer currentPage, Map<String, Object> model,
+	        HttpServletRequest request) {
 		
 		BillingService billingService = Context.getService(BillingService.class);
 		
 		int total = billingService.countListMiscellaneousService();
 		
-		PagingUtil pagingUtil = new PagingUtil( RequestUtil.getCurrentLink(request) , pageSize, currentPage, total );
+		PagingUtil pagingUtil = new PagingUtil(RequestUtil.getCurrentLink(request), pageSize, currentPage, total);
 		
-		List<MiscellaneousService> miscellaneousServices = billingService.listMiscellaneousService(pagingUtil.getStartPos(), pagingUtil.getPageSize());
+		List<MiscellaneousService> miscellaneousServices = billingService.listMiscellaneousService(pagingUtil.getStartPos(),
+		    pagingUtil.getPageSize());
 		
-		model.put("miscellaneousServices", miscellaneousServices );
+		model.put("miscellaneousServices", miscellaneousServices);
 		
 		model.put("pagingUtil", pagingUtil);
 		
