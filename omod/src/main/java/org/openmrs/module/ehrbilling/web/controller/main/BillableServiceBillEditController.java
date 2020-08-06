@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.lang.Integer;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -47,6 +48,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class BillableServiceBillEditController {
 	
 	private Log logger = LogFactory.getLog(getClass());
+	
+	private java.lang.Object BigDecimal;
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public String viewForm(Model model, @RequestParam("billId") Integer billId, @RequestParam("patientId") Integer patientId) {
