@@ -24,8 +24,8 @@ public class BillCalculatorImpl implements BillCalculator {
 		return new BigDecimal(1);
 	}
 	
-	public boolean isFreeBill(Map<String, Object> parameters) {
-		
-		return false;
+	//public int isFreeBill(Map<String, Object> parameters) {
+	public int isFreeBill(Map<String, Object> parameters) {
+		return 0;
 	}
 }

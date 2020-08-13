@@ -54,7 +54,8 @@ public class BillCalculatorImpl implements BillCalculator {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean isFreeBill(Map<String, Object> parameters) {
+	//public int isFreeBill(Map<String, Object> parameters) {
+	public int isFreeBill(Map<String, Object> parameters) {
 		Map<String, String> attributes = (Map<String, String>) parameters.get("attributes");
 		String patientCategory = attributes.get("Patient Category");
 		String bplNumber = attributes.get("BPL Number");
@@ -63,15 +64,15 @@ public class BillCalculatorImpl implements BillCalculator {
 		if (!StringUtils.isBlank(patientCategory)) {
 			if (patientCategory.contains("RSBY")) {
 				if (!StringUtils.isBlank(rsbyNumber)) {
-					return true;
+					return 1;
 				}
 			} else if (patientCategory.contains("BPL")) {
 				if (!StringUtils.isBlank(bplNumber)) {
-					return true;
+					return 1;
 				}
 			}
 		}
 		
-		return false;
+		return 0;
 	}
 }

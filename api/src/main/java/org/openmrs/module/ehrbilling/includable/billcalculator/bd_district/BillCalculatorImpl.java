@@ -81,17 +81,17 @@ public class BillCalculatorImpl implements BillCalculator {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	public boolean isFreeBill(Map<String, Object> parameters) {
+	public int isFreeBill(Map<String, Object> parameters) {
 		Map<String, String> attributes = (Map<String, String>) parameters.get("attributes");
 		String patientCategory = attributes.get("Patient Category");
 		if (patientCategory != null) {
 			
 			if (patientCategory.contains("General")) {
-				return false;
+				return 0;
 			}
 		} else {
-			return false;
+			return 0;
 		}
-		return true;
+		return 1;
 	}
 }

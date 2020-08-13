@@ -64,11 +64,14 @@ public class BillCalculatorService implements BillCalculator {
 	/**
 	 * Determine whether a bill should be free or not. If the `calculator` found, it will be used to
 	 * determine. Otherwise, it will return `false` which means the bill is not free.
+	 * 
+	 * @return
 	 */
-	public boolean isFreeBill(Map<String, Object> parameters) {
+	//public int isFreeBill(Map<String, Object> parameters) {
+	public int isFreeBill(Map<String, Object> parameters) {
 		if (calculator != null) {
 			return calculator.isFreeBill(parameters);
 		}
-		return false;
+		return 0;
 	}
 }

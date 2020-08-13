@@ -24,10 +24,11 @@ public interface BillCalculator {
 	public BigDecimal getRate(Map<String, Object> parameters);
 	
 	/**
-	 * Determine whether a bill should be free or not
+	 * at Determine whether a bill should be free or not
 	 * 
-	 * @param parameters TODO
+	 * @param patarameters TODO
 	 * @return
 	 */
-	public boolean isFreeBill(Map<String, Object> parameters);
+	//public int isFreeBill(Map<String, Object> parameters);
+	public int isFreeBill(Map<String, Object> parameters);
 }
