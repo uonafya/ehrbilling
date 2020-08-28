@@ -213,4 +213,75 @@
     </sql>
     </changeSet>
 
+    <changeSet id="billing:2020-08-28-10:41" author="ningosi">
+    <preConditions onFail="MARK_RAN" onError="WARN">
+        <dbms type="mysql"/>
+    </preConditions>
+    <comment>Change Service table to BillableService</comment>
+        <sql>
+            ALTER TABLE billing_patient_service_bill_item DROP FOREIGN KEY
+            `fk_patientservicebillitem_service`;
+            ALTER TABLE billing_service
+            RENAME billing_billable_service;
+            ALTER TABLE
+            billing_patient_service_bill_item ADD CONSTRAINT
+            `fk_patientservicebillitem_billableservice` FOREIGN KEY
+            (`service_id`) REFERENCES `billing_billable_service` (`service_id`);
+        </sql>
+    </changeSet>
+
+    <changeSet id="billing:2020-08-28-10:43" author="ningosi">
+    <preConditions onFail="MARK_RAN" onError="WARN">
+        <dbms type="mysql"/>
+    </preConditions>
+    <comment>Create tables for Miscellaneous service</comment>
+        <sql>
+            CREATE TABLE IF NOT EXISTS `billing_miscellaneous_service` (
+            `id`
+            int(11) NOT NULL auto_increment,
+            `name` varchar(255) default NULL,
+            `description` varchar(255) default NULL,
+            `price` decimal(19,2) default
+            NULL,
+            `retired` bit(1) default NULL,
+            `retired_date` datetime default
+            NULL,
+            `creator` int(11) default NULL,
+            `created_date` datetime default
+            NULL,
+            PRIMARY KEY (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+            CREATE
+            TABLE IF NOT EXISTS `billing_miscellaneous_service_bill` (
+            `id`
+            int(11) NOT NULL auto_increment,
+            `liable_name` varchar(255) default
+            NULL,
+            `description` varchar(255) default NULL,
+            `amount` decimal(19,2)
+            default NULL,
+            `printed` bit(1) default NULL,
+            `creator` int(11) default
+            NULL,
+            `created_date` datetime default NULL,
+            `voided` bit(1) default
+            NULL,
+            `voided_date` datetime default NULL,
+            `service_id` int(11) default
+            NULL,
+            PRIMARY KEY (`id`),
+            KEY
+            `fk_miscellaneous_service_bill_miscellaneous_service_service`
+            (`service_id`),
+            CONSTRAINT
+            `fk_miscellaneous_service_bill_miscellaneous_service_service`
+            FOREIGN
+            KEY (`service_id`) REFERENCES `billing_miscellaneous_service`
+            (`id`)
+            )
+            ENGINE=InnoDB DEFAULT CHARSET=utf8;
+        </sql>
+    </changeSet>
+
 </databaseChangeLog>
