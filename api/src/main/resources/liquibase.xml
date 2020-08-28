@@ -284,4 +284,86 @@
         </sql>
     </changeSet>
 
+    <changeSet id="billing:2020-08-28-10:50" author="ningosi">
+    <preConditions onFail="MARK_RAN" onError="WARN">
+        <dbms type="mysql"/>
+    </preConditions>
+    <comment>Create tables Receipt</comment>
+        <sql>
+            CREATE TABLE IF NOT EXISTS `billing_receipt` (
+            `id` int(11) NOT
+            NULL auto_increment,
+            `paid_date` datetime default NULL,
+            PRIMARY KEY
+            (`id`)
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+            ALTER TABLE
+            billing_ambulance_bill
+            ADD COLUMN `receipt_id` int(11) default
+            NULL,
+            ADD CONSTRAINT `fk_ambulance_receipt` FOREIGN KEY (`receipt_id`)
+            REFERENCES `billing_receipt` (`id`);
+
+            ALTER TABLE billing_tender_bill
+            ADD COLUMN `receipt_id` int(11) default
+            NULL,
+            ADD CONSTRAINT
+            `fk_tender_receipt` FOREIGN KEY (`receipt_id`) REFERENCES
+            `billing_receipt` (`id`);
+
+            ALTER TABLE
+            billing_miscellaneous_service_bill
+            ADD COLUMN `receipt_id`
+            int(11)
+            default NULL,
+            ADD CONSTRAINT `fk_miscellaneous_receipt` FOREIGN KEY
+            (`receipt_id`)
+            REFERENCES `billing_receipt` (`id`);
+        </sql>
+    </changeSet>
+
+    <changeSet id="billing:2020-08-28-10:52" author="ningosi">
+    <preConditions onFail="MARK_RAN" onError="WARN">
+        <dbms type="mysql"/>
+    </preConditions>
+    <comment>Adding foreign keys for receipt</comment>
+        <sql>
+            ALTER TABLE billing_patient_service_bill_item
+            ADD
+            COLUMN `order_id` int(11)
+            default NULL,
+            ADD CONSTRAINT
+            `fk_patientservicebillitem_order` FOREIGN KEY
+            (`order_id`) REFERENCES
+            `orders` (`order_id`);
+            ALTER TABLE
+            billing_billable_service ADD
+            category INT(11);
+        </sql>
+    </changeSet>
+
+    <changeSet id="billing:2020-08-28-10:55" author="ningosi">
+    <preConditions onFail="MARK_RAN" onError="WARN">
+        <dbms type="mysql"/>
+    </preConditions>
+    <comment>Add `actual_amount` columns into table `billing_patient_service_bill_item`</comment>
+        <sql>
+            ALTER TABLE
+            `billing_patient_service_bill_item` ADD `actual_amount` decimal(19,2)
+            DEFAULT NULL;
+        </sql>
+    </changeSet>
+    <changeSet id="billing:2020-08-28-11:00" author="ningosi">
+    <preConditions onFail="MARK_RAN" onError="WARN">
+        <dbms type="mysql"/>
+    </preConditions>
+    <comment>Add column patient_name,receipt_number,origin,destination for billing_ambulance_bill_item table</comment>
+    <sql>
+        ALTER TABLE billing_ambulance_bill_item ADD(`patient_name`
+        varchar(50),`receipt_number` varchar(13),`origin`
+        varchar(20),`destination` varchar(20));
+    </sql>
+    </changeSet>
+
 </databaseChangeLog>
