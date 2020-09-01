@@ -103,7 +103,7 @@
         </preConditions>
         <comment>creating base tables for the billing_ambulance_bill</comment>
         <sql>
-        CCREATE TABLE IF NOT EXISTS `billing_ambulance_bill` (
+        CREATE TABLE IF NOT EXISTS `billing_ambulance_bill` (
             `ambulance__bill_id` int(11) NOT NULL AUTO_INCREMENT,
             `description` varchar(255) DEFAULT NULL,
             `creator` int(11) DEFAULT NULL,
