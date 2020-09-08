@@ -29,8 +29,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.openmrs.Patient;
+import org.openmrs.PersonAttribute;
+import org.openmrs.PersonAttributeType;
 import org.openmrs.User;
 import org.openmrs.api.PatientService;
+import org.openmrs.api.PersonService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.hospitalcore.BillingService;
 import org.openmrs.module.hospitalcore.HospitalCoreService;
@@ -63,6 +66,9 @@ public class ListOfOrderController {
 		// Kesavulu loka 25-06-2013, Add Patient Details on the page where Order ID is clicked
 		HospitalCoreService hospitalCoreService = Context.getService(HospitalCoreService.class);
 		PatientSearch patientSearch = hospitalCoreService.getPatientByPatientId(patientId);
+		PersonService personService = Context.getPersonService();
+		PersonAttributeType category = personService.getPersonAttributeTypeByUuid("09cd268a-f0f5-11ea-99a8-b3467ddbf779");
+		PersonAttributeType fileNumber = personService.getPersonAttributeTypeByUuid("09cd268a-f0f5-11ea-99a8-b3467ddbf779");
                 
 		model.addAttribute("age",patient.getAge());
 		
@@ -74,8 +80,8 @@ public class ListOfOrderController {
 		{
 			model.addAttribute("gender","Female");
 		}
-		model.addAttribute("category",patient.getAttribute(14));
-		model.addAttribute("fileNumber",patient.getAttribute(43));
+		model.addAttribute("category",patient.getAttribute(category.getPersonAttributeTypeId()));
+		model.addAttribute("fileNumber",patient.getAttribute(fileNumber.getPersonAttributeTypeId()));
 		/*
 		if(patient.getAttribute(14).getValue() == "Waiver"){
 			model.addAttribute("exemption", patient.getAttribute(32));
