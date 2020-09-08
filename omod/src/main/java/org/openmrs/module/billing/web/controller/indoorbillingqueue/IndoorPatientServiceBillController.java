@@ -69,7 +69,7 @@ public class IndoorPatientServiceBillController {
 		IpdPatientAdmissionLog ipdPatientAdmissionLog = ipdService.getIpdPatientAdmissionLog(admissionLogId);
 		IpdPatientAdmitted ipdPatientAdmitted = ipdService.getAdmittedByAdmissionLogId(ipdPatientAdmissionLog);
 
-		PersonAttribute fileNumber = patient.getAttribute(43);
+		PersonAttribute fileNumber = patient.getAttribute(Context.getPersonService().getPersonAttributeTypeByUuid("09cd268a-f0f5-11ea-99a8-b3467ddbf779")); //43
 		if(fileNumber!=null){
 			model.addAttribute("fileNumber", fileNumber.getValue());					
 		}
@@ -89,7 +89,7 @@ public class IndoorPatientServiceBillController {
 			if(patient.getGender().equals("F")){
 				model.addAttribute("gender", "Female");
 			}
-			model.addAttribute("category", patient.getAttribute(14).getValue());
+			model.addAttribute("category", patient.getAttribute(Context.getPersonService().getPersonAttributeTypeByUuid("09cd268a-f0f5-11ea-99a8-b3467ddbf779")).getValue()); //14
 
 			model.addAttribute("listBill", billingService
 					.listPatientServiceBillByPatient(pagingUtil.getStartPos(),

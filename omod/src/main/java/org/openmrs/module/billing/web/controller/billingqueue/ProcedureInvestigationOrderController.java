@@ -33,6 +33,7 @@ import org.openmrs.Patient;
 import org.openmrs.PersonAttribute;
 import org.openmrs.PersonAttributeType;
 import org.openmrs.api.PatientService;
+import org.openmrs.api.PersonService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.billing.includable.billcalculator.BillCalculatorForBDService;
 import org.openmrs.module.hospitalcore.BillingService;
@@ -68,9 +69,13 @@ public class ProcedureInvestigationOrderController {
 		HospitalCoreService hospitalCoreService = Context.getService(HospitalCoreService.class);
 		PatientSearch patientSearch = hospitalCoreService.getPatientByPatientId(patientId);
 		Patient patient = Context.getPatientService().getPatient(patientId);
+		PersonService personService = Context.getPersonService();
+		PersonAttributeType category = personService.getPersonAttributeTypeByUuid("09cd268a-f0f5-11ea-99a8-b3467ddbf779");//14
+		PersonAttributeType fileNumber = personService.getPersonAttributeTypeByUuid("09cd268a-f0f5-11ea-99a8-b3467ddbf779");//43
+
 		model.addAttribute("age",patient.getAge());
-		model.addAttribute("category",patient.getAttribute(14));
-		model.addAttribute("fileNumber",patient.getAttribute(43));
+		model.addAttribute("category",patient.getAttribute(category.getPersonAttributeTypeId()));
+		model.addAttribute("fileNumber",patient.getAttribute(fileNumber.getPersonAttributeTypeId()));
 		if(patient.getGender().equals("M"))
 		{
 			model.addAttribute("gender","Male");
@@ -136,13 +141,13 @@ public class ProcedureInvestigationOrderController {
             PersonAttributeType personAttributePCT=hcs.getPersonAttributeTypeByName("Paying Category Type");
             PersonAttributeType personAttributeNPCT=hcs.getPersonAttributeTypeByName("Non-Paying Category Type");
             PersonAttributeType personAttributeSSCT=hcs.getPersonAttributeTypeByName("Special Scheme Category Type");
-            if(attributeType.getPersonAttributeTypeId()==personAttributePCT.getPersonAttributeTypeId()){
+            if(attributeType.getPersonAttributeTypeId().equals(personAttributePCT.getPersonAttributeTypeId())){
             	patientCategory = pa.getValue();
             }
-            else if(attributeType.getPersonAttributeTypeId()==personAttributeNPCT.getPersonAttributeTypeId()){
+            else if(attributeType.getPersonAttributeTypeId().equals(personAttributeNPCT.getPersonAttributeTypeId())){
             	patientCategory = pa.getValue();
             }
-            else if(attributeType.getPersonAttributeTypeId()==personAttributeSSCT.getPersonAttributeTypeId()){
+            else if(attributeType.getPersonAttributeTypeId().equals(personAttributeSSCT.getPersonAttributeTypeId())){
             	patientCategory = pa.getValue();
             }
         }
@@ -226,7 +231,7 @@ public class ProcedureInvestigationOrderController {
 		
 		bill.setPatientSubCategory(patientCategory);
 		
-		PersonAttribute pCat = patient.getAttribute(45);
+		PersonAttribute pCat = patient.getAttribute(Context.getPersonService().getPersonAttributeTypeByUuid("0a8ae818-f06a-11ea-ab82-2f183f30d954")); //45
 
 		if(pCat!= null && pCat.getValue().equals("NHIF CIVIL SERVANT")){
 				bill.setPatientCategory("NHIF Patient");

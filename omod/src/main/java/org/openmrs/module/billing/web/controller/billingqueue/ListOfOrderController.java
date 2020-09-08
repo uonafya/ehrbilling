@@ -67,8 +67,8 @@ public class ListOfOrderController {
 		HospitalCoreService hospitalCoreService = Context.getService(HospitalCoreService.class);
 		PatientSearch patientSearch = hospitalCoreService.getPatientByPatientId(patientId);
 		PersonService personService = Context.getPersonService();
-		PersonAttributeType category = personService.getPersonAttributeTypeByUuid("09cd268a-f0f5-11ea-99a8-b3467ddbf779");
-		PersonAttributeType fileNumber = personService.getPersonAttributeTypeByUuid("09cd268a-f0f5-11ea-99a8-b3467ddbf779");
+		PersonAttributeType category = personService.getPersonAttributeTypeByUuid("09cd268a-f0f5-11ea-99a8-b3467ddbf779");//14
+		PersonAttributeType fileNumber = personService.getPersonAttributeTypeByUuid("09cd268a-f0f5-11ea-99a8-b3467ddbf779");//43
                 
 		model.addAttribute("age",patient.getAge());
 		
