@@ -136,8 +136,8 @@ public class BillableServiceBillListForBDController {
 			model.addAttribute("ChildCatId", ChildCatId);
 			model.addAttribute("categoryList", categoryList);
 			
-			model.addAttribute("category",patient.getAttribute(14));
-			model.addAttribute("fileNumber",patient.getAttribute(43));
+			model.addAttribute("category",patient.getAttribute(Context.getPersonService().getPersonAttributeTypeByUuid("09cd268a-f0f5-11ea-99a8-b3467ddbf779"))); //14
+			model.addAttribute("fileNumber",patient.getAttribute(Context.getPersonService().getPersonAttributeTypeByUuid("09cd268a-f0f5-11ea-99a8-b3467ddbf779"))); //43
 			
 			if(patient.getGender().equals("M"))
 			{
@@ -157,7 +157,7 @@ public class BillableServiceBillListForBDController {
 						if(ipdPatientAdmitted.getBed()!=null){
 						model.addAttribute("bed", ipdPatientAdmitted.getBed());
 						}
-						PersonAttribute fileNumber = patient.getAttribute(43);
+						PersonAttribute fileNumber = patient.getAttribute(Context.getPersonService().getPersonAttributeTypeByUuid("09cd268a-f0f5-11ea-99a8-b3467ddbf779")); //43
 						if(fileNumber!=null){
 							model.addAttribute("fileNumber", fileNumber.getValue());					
 						}
@@ -356,13 +356,13 @@ public class BillableServiceBillListForBDController {
                 PersonAttributeType personAttributePCT=hcs.getPersonAttributeTypeByName("Paying Category Type");
                 PersonAttributeType personAttributeNPCT=hcs.getPersonAttributeTypeByName("Non-Paying Category Type");
                 PersonAttributeType personAttributeSSCT=hcs.getPersonAttributeTypeByName("Special Scheme Category Type");
-                if(attributeType.getPersonAttributeTypeId()==personAttributePCT.getPersonAttributeTypeId()){
+                if(attributeType.getPersonAttributeTypeId().equals(personAttributePCT.getPersonAttributeTypeId())){
                 	patientSubCategory = pa.getValue();
                 }
-                else if(attributeType.getPersonAttributeTypeId()==personAttributeNPCT.getPersonAttributeTypeId()){
+                else if(attributeType.getPersonAttributeTypeId().equals(personAttributeNPCT.getPersonAttributeTypeId())){
                 	patientSubCategory = pa.getValue();
                 }
-                else if(attributeType.getPersonAttributeTypeId()==personAttributeSSCT.getPersonAttributeTypeId()){
+                else if(attributeType.getPersonAttributeTypeId().equals(personAttributeSSCT.getPersonAttributeTypeId())){
                 	patientSubCategory = pa.getValue();
                 }
             }            

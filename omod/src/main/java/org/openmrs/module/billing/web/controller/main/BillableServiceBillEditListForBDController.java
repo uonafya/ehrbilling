@@ -70,15 +70,15 @@ public class BillableServiceBillEditListForBDController {
 			PagingUtil pagingUtil = new PagingUtil(RequestUtil.getCurrentLink(request), pageSize, currentPage, total);
 			
 			model.addAttribute("age",patient.getAge());
-			model.addAttribute("category",patient.getAttribute(14));
+			model.addAttribute("category",patient.getAttribute(Context.getPersonService().getPersonAttributeTypeByUuid("09cd268a-f0f5-11ea-99a8-b3467ddbf779"))); //14
 			model.addAttribute("gender",patient.getGender());
 
 			
-			if(patient.getAttribute(14).getValue() == "Waiver"){
-				model.addAttribute("exemption", patient.getAttribute(32));
+			if(patient.getAttribute(Context.getPersonService().getPersonAttributeTypeByUuid("09cd268a-f0f5-11ea-99a8-b3467ddbf779")).getValue().equals("Waiver")){ //14
+				model.addAttribute("exemption", patient.getAttribute(Context.getPersonService().getPersonAttributeTypeByUuid("a804c03e-f1bc-11ea-ae43-dfa0f52ad887"))); //32
 			}
-			else if(patient.getAttribute(14).getValue()!="General" && patient.getAttribute(14).getValue()!="Waiver"){
-				model.addAttribute("exemption", patient.getAttribute(36));
+			else if(!patient.getAttribute(Context.getPersonService().getPersonAttributeTypeByUuid("09cd268a-f0f5-11ea-99a8-b3467ddbf779")).getValue().equals("General") && !patient.getAttribute(Context.getPersonService().getPersonAttributeTypeByUuid("09cd268a-f0f5-11ea-99a8-b3467ddbf779")).getValue().equals("Waiver")){
+				model.addAttribute("exemption", patient.getAttribute(Context.getPersonService().getPersonAttributeTypeByUuid("a22892ce-f1d2-11ea-a512-138a123d324a")));
 			}
 			else {
 				model.addAttribute("exemption", " ");

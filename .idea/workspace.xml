@@ -3,8 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="62e02f7d-83db-4d9d-83b9-72a949ceb275" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/omod/src/main/java/org/openmrs/module/billing/web/controller/billingqueue/ListOfOrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/omod/src/main/java/org/openmrs/module/billing/web/controller/billingqueue/ListOfOrderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/omod/src/main/java/org/openmrs/module/billing/web/controller/billingqueue/ProcedureInvestigationOrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/omod/src/main/java/org/openmrs/module/billing/web/controller/billingqueue/ProcedureInvestigationOrderController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/omod/src/main/java/org/openmrs/module/billing/web/controller/main/BillableServiceBillEditListForBDController.java" beforeDir="false" afterPath="$PROJECT_DIR$/omod/src/main/java/org/openmrs/module/billing/web/controller/main/BillableServiceBillEditListForBDController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/omod/src/main/java/org/openmrs/module/billing/web/controller/main/BillableServiceBillListForBDController.java" beforeDir="false" afterPath="$PROJECT_DIR$/omod/src/main/java/org/openmrs/module/billing/web/controller/main/BillableServiceBillListForBDController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +64,8 @@
       <workItem from="1598957467003" duration="6581000" />
       <workItem from="1598979627654" duration="1200000" />
       <workItem from="1599113683096" duration="9207000" />
-      <workItem from="1599559612731" duration="1177000" />
+      <workItem from="1599559612731" duration="3882000" />
+      <workItem from="1599634271271" duration="1150000" />
     </task>
     <servers />
   </component>
