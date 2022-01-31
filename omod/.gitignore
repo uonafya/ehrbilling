@@ -1,5 +1,11 @@
-target/
-/.settings
-/.project
-/.classpath
-bin/
+/.metadata
+/.git
+.project
+.settings
+**/.project
+**/.settings
+**/target
+*.iml
+/.idea
+**/bin
+**/.classpath

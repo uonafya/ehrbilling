@@ -5,7 +5,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>billing</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>2.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Billing module</name>
 	<description>Parent project for billing</description>
@@ -58,7 +58,7 @@
 			<dependency>
 				<groupId>org.openmrs.module</groupId>
 				<artifactId>legacyui-api</artifactId>
-				<version>${legacyuiVersion}</version>
+				<version>${legacyUiVersion}</version>
 				<scope>provided</scope>
 			</dependency>
 		</dependencies>
@@ -66,8 +66,8 @@
 
 	<properties>
 		<openMRSVersion>2.3.3</openMRSVersion>
-		<hospitalcoreVersion>1.0.7-SNAPSHOT</hospitalcoreVersion>
-		<legacyuiVersion>1.10.0-SNAPSHOT</legacyuiVersion>
+		<hospitalcoreVersion>2.0.0</hospitalcoreVersion>
+		<legacyUiVersion>1.5.0</legacyUiVersion>
 	</properties>
 
 	<build>
